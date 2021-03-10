@@ -11,7 +11,7 @@ Window::Window() : gain(5), count(0)
 QAudioInput* audio; // Class member
 	QFile destinationFile;
 
-	setWindowTitle("Welcome to the Smart Intonation Game");  //set title
+	setWindowTitle("Welcome to the Smart Intonation Game NEw!");  //set title
 	//set push buttons
 	pushbutton1 = new QPushButton;            
 	pushbutton1->setText(tr("Learning"));         //type on the button
