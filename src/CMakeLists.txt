@@ -26,5 +26,5 @@ target_link_libraries(qwt-example Qt5::Widgets)
 target_link_libraries(qwt-example qwt-qt5)
 target_link_libraries(qwt-example Qt5::Multimedia)
 target_link_libraries(qwt-example Qt5::MultimediaWidgets)
-QT5_USE_MODULES (${EXECUTABLE_NAME} Multimedia MultimediaWidgets)
+
 install(TARGETS qwt-example)

@@ -1,9 +1,9 @@
 #include "window.h"
-#include "audioinput.h"
+
 #include <QAudioRecorder>
 #include <QMediaPlayer>
 #include <QApplication>
-//#include <QVideoWidget>
+#include <QVideoWidget>
 // Main program
 int main(int argc, char *argv[])
 {

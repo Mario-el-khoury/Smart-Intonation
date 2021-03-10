@@ -6,7 +6,7 @@
 #include <qwt/qwt_plot_textlabel.h>                  //Text
 #include <QBoxLayout>
 #include <QtMultimedia>
-//#include <QVideoWidget>
+#include <QVideoWidget>
 
 
 //#include <QAudioRecorder>

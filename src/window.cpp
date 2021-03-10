@@ -55,6 +55,14 @@ QAudioInput* audio; // Class member
      // widget->setWindowTitle("New Window");
    //connect(pushbutton1, SIGNAL(clicked()), widget, SLOT(show()));
 
+  //// play slot///
+     player = new QMediaPlayer;
+     player->setMedia(QUrl::fromLocalFile(QFileInfo("C-scale.mp4").absoluteFilePath()));
+	 player->setVolume(50);           // set the volume 
+	 videoWidget = new QVideoWidget;
+     player->setVideoOutput(videoWidget);
+   ////
+
    connect(pushbutton1, SIGNAL(clicked()), this, SLOT(playslot()));  //connect button1 to the playslot
    connect(stopbutton, SIGNAL(clicked()), this, SLOT(pauseslot()));  //connect stoputton to the pause slot
    connect(pushbutton2, SIGNAL(clicked()), this, SLOT(AudioRecorderSlot())); //connect button2 to the audiorecorder
@@ -66,7 +74,9 @@ QAudioInput* audio; // Class member
     pushbutton3->show();
 	quitbutton->show();
     
-   
+ 
+
+
 	// set up the initial plot data
 	//for( int index=0; index<plotDataSize; ++index )
 	//{
@@ -93,8 +103,9 @@ QAudioInput* audio; // Class member
 	// plot to the left of knob and thermometer
 	hLayout = new QHBoxLayout;
 	hLayout->addLayout(vLayout);	
-	//hLayout->addWidget(plot);           ///plot the graph on the same interface
-    
+	hLayout->addWidget(stopbutton); 
+	hLayout->addWidget(resumebutton); 
+	hLayout->addWidget(videoWidget);      
 	setLayout(hLayout);
 
 }
@@ -130,14 +141,7 @@ void Window::timerEvent( QTimerEvent * )
 void Window::playslot()    
 {  
 	 stopbutton->show();
-	 hLayout->addWidget(stopbutton); 
-	 
-	 player = new QMediaPlayer;
-	 player->setMedia(QUrl::fromLocalFile("/home/mario/Test/qwt-example/C-scale.mp3"));
-	 player->setVolume(50);           // set the volume 
-	// videoWidget = new QVideoWidget;
-    // player->setVideoOutput(videoWidget);
-    // videoWidget->show();
+     videoWidget->show();
      player->play();                 //play the song
 	 pushbutton1->setDisabled(true);     //disable every button in the app while listening to avoid conflicts
 	 pushbutton2->setDisabled(true);
@@ -147,12 +151,13 @@ void Window::playslot()
 void Window::pauseslot()  
 { 
      player->pause();             //pause the song then enable the user to press any button 
-     pushbutton1->setEnabled(true);     
+     //pushbutton1->setDisabled(true);     
 	 pushbutton2->setEnabled(true);
 	 pushbutton3->setEnabled(true);
+
 	 resumebutton->show();
-	 hLayout->addWidget(resumebutton); 
 	 stopbutton->hide();
+	 videoWidget->hide();
 }
 void Window::resumeslot()  
 {
@@ -160,6 +165,7 @@ void Window::resumeslot()
      stopbutton->show();
      resumebutton->hide();
      pushbutton1->setDisabled(true);   
+	 videoWidget->show();
 
 }
 
