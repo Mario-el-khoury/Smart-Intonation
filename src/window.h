@@ -33,7 +33,7 @@ public slots:
 	 void resumeslot();
 	  void AudioRecorderSlot();
 	  void recognisingSlot();//declare slot 
-
+      void exitvideoslot();
 	 void stopRecording();
 	 void handleStateChanged(QAudio::State newState);
 // internal variables for the window class
@@ -45,6 +45,7 @@ private:
     QPushButton *quitbutton;
 	QPushButton *stopbutton;
 	QPushButton *resumebutton;
+	QPushButton *exitvideobutton;
 	
     QwtPlot *plot;
 	QAudioRecorder *audioRecorder;
