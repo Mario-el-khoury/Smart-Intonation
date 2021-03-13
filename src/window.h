@@ -31,10 +31,17 @@ public slots:
 	 void quitApp();              //declare a slot to quit the app
 	 void pauseslot();     //declare a slot that pause the learning
 	 void resumeslot();
-	  void AudioRecorderSlot();
-	  void recognisingSlot();//declare slot 
-      void exitvideoslot();
+	 void AudioRecorderSlot();
+	 void recognisingSlot();//declare slot 
+     void exitslot();
 	 void stopRecording();
+	 void DoPressedSlot();
+	 void RePressedSlot();
+	void MiPressedSlot();
+     void FaPressedSlot();
+	 void SoPressedSlot();
+     void LaPressedSlot();
+	 void SiPressedSlot();
 	 void handleStateChanged(QAudio::State newState);
 // internal variables for the window class
 private:
@@ -45,9 +52,16 @@ private:
     QPushButton *quitbutton;
 	QPushButton *stopbutton;
 	QPushButton *resumebutton;
-	QPushButton *exitvideobutton;
-	
-    QwtPlot *plot;
+	QPushButton *exitbutton;
+	QPushButton *dobutton;
+	QPushButton *rebutton;
+	QPushButton *mibutton;
+	QPushButton *fabutton;
+	QPushButton *sobutton;
+	QPushButton *labutton;
+	QPushButton *sibutton;
+	QPushButton *feedbackbutton;
+    
 	QAudioRecorder *audioRecorder;
 	QMediaPlayer *player;
     QVideoWidget* videoWidget;
@@ -59,16 +73,10 @@ private:
 	QVBoxLayout  *vLayout;  // vertical layout
 	QHBoxLayout  *hLayout;  // horizontal layout
 
-	//static const int plotDataSize = 100;
-
-	// data arrays for the plot
-	//double xData[plotDataSize];
-	//double yData[plotDataSize];
 
 	double gain;
 	int count;
 
-//	ADCreader *adcreader;
 };
 
 #endif // WINDOW_H
