@@ -7,6 +7,9 @@
 #include <QBoxLayout>
 #include <QtMultimedia>
 #include <QVideoWidget>
+#include <QDebug>
+#include <algorithm>
+#include <fftw3.h>
 
 
 //#include <QAudioRecorder>
@@ -27,22 +30,24 @@ public:
 
 public slots:
 	
-     void playslot();           //declare a slot called from the pushbutton1
-	 void quitApp();              //declare a slot to quit the app
-	 void pauseslot();     //declare a slot that pause the learning
-	 void resumeslot();
-	 void AudioRecorderSlot();
-	 void recognisingSlot();//declare slot 
-     void exitslot();
-	 void stopRecording();
-	 void DoPressedSlot();
-	 void RePressedSlot();
+	void playslot();           //declare a slot called from the pushbutton1
+	void quitApp();              //declare a slot to quit the app
+	void pauseslot();     //declare a slot that pause the learning
+	void resumeslot();
+	void AudioRecorderSlot();
+	void recognisingSlot();//declare slot 
+	void exitslot();
+	void stopRecording();
+	void DoPressedSlot();
+	void RePressedSlot();
 	void MiPressedSlot();
-     void FaPressedSlot();
-	 void SoPressedSlot();
-     void LaPressedSlot();
-	 void SiPressedSlot();
-	 void handleStateChanged(QAudio::State newState);
+	void FaPressedSlot();
+	void SoPressedSlot();
+	void LaPressedSlot();
+	void SiPressedSlot();
+	void handleStateChanged(QAudio::State newState);
+
+	void readMicrophone();
 // internal variables for the window class
 private:
 
@@ -69,13 +74,30 @@ private:
 	QFile destinationFile;
 	QAudioFormat format;
 
+
 	// layout elements from Qt itself http://qt-project.org/doc/qt-4.8/classes.html
 	QVBoxLayout  *vLayout;  // vertical layout
 	QHBoxLayout  *hLayout;  // horizontal layout
 
 
-	double gain;
-	int count;
+
+
+
+	double* fftinputbuffer;
+	int fftbuffsize;
+	fftw_complex* fftoutputbuffer;
+	fftw_plan plan;
+
+	int count=0;
+
+	double sampleRate = 48000;
+	int bufferTime = 500; //time to hold in buffer in ms
+
+	double peakHertz;
+
+	
+	QByteArray* readmicarray;
+	QBuffer* readMic;
 
 };
 
