@@ -5,13 +5,13 @@
 #include <QVideoWidget>
 #include <cmath>  // for sine stuff
 #include <iostream>
-#include <random>
-
-Window::Window() : gain(5), count(0)
+#include <random>   // for random numbers
+#include <unistd.h>   // for delays   //usleep(3000000); sleep 3 seconds
+Window::Window() 
 {
-QAudioInput* audio; // Class member
+	QAudioInput* audio; // Class member
 	QFile destinationFile;
-
+    setStyleSheet("background-image:url(./file/left.png)");  //set background
 	setWindowTitle("Welcome to the Smart Intonation Software!");  //set title
 	//set push buttons
 	pushbutton1 = new QPushButton;            
@@ -158,9 +158,22 @@ QAudioInput* audio; // Class member
 	videoWidget->hide();
 	setLayout(hLayout);
 
+
+	fftbuffsize = (int)(sampleRate*((double)bufferTime/1000));
+	int fftbuffoutsize = (fftbuffsize/2)+1;  // changed by mario
+	
+
+	fftinputbuffer = static_cast<double*> (fftw_malloc(fftbuffsize *sizeof(double)));  // no need for "new" cz fft is doing it 
+	fftoutputbuffer = static_cast<fftw_complex*> (fftw_malloc(fftbuffsize *sizeof(fftw_complex)));
+
+	
+	plan = fftw_plan_dft_r2c_1d(fftbuffsize,fftinputbuffer,fftoutputbuffer,FFTW_ESTIMATE);  // creating the plan
+	// fftw_execute(plan);
 }
 
 Window::~Window() {
+	fftw_destroy_plan(plan);
+	fftw_cleanup();
 	// tells the thread to no longer run its endless loop
 //	adcreader->quit();
 	// wait until the run method has terminated
@@ -204,16 +217,16 @@ void Window::playslot()
 //this function is used to pause the learning video
 void Window::pauseslot()  
 { 
-     player->pause();             //pause the song then enable the user to press any button 
-   resumebutton->setEnabled(true);
-     stopbutton->setDisabled(true);
+    player->pause();             //pause the song then enable the user to press any button 
+   	resumebutton->setEnabled(true);
+    stopbutton->setDisabled(true);
 	 
 }
 void Window::resumeslot()  
 {
-     player->play();  
-     stopbutton->setEnabled(true);
-     resumebutton->setDisabled(true);
+    player->play();  
+    stopbutton->setEnabled(true);
+    resumebutton->setDisabled(true);
     
 }
 
@@ -247,14 +260,12 @@ void Window::exitslot()
 	pushbutton3->setDisabled(true);
 	pushbutton1->setDisabled(true);
 	pushbutton2->setDisabled(true);
-	destinationFile.setFileName("/home/mario/project2/test.mp3");
-    destinationFile.open( QIODevice::WriteOnly | QIODevice::Truncate );
-
+	
 	QAudioFormat format;
     // Set up the desired format, for example:
-    format.setSampleRate(8000);
+    format.setSampleRate(sampleRate); //how fast you take the data 44.1khz
     format.setChannelCount(1);
-    format.setSampleSize(8);
+    format.setSampleSize(8);  // 8 bits
     format.setCodec("audio/mpeg");
     format.setByteOrder(QAudioFormat::LittleEndian);
     format.setSampleType(QAudioFormat::UnSignedInt);
@@ -266,16 +277,65 @@ void Window::exitslot()
     }
 
     audio = new QAudioInput(format, this);
-    connect(audio, SIGNAL(stateChanged(QAudio::State)), this, SLOT(handleStateChanged(QAudio::State)));
 
-    QTimer::singleShot(3000, this, SLOT(stopRecording()));
-    audio->start(&destinationFile);
+
+	audio->setBufferSize(fftbuffsize); // size of imput data
+
+	connect(audio, SIGNAL(notify()),this,SLOT(readMicrophone()));
+	readmicarray = new QByteArray;
+	readMic = new QBuffer(readmicarray);
+	readMic->open(QIODevice::ReadWrite|QIODevice::Truncate);
+
+	audio->setNotifyInterval(bufferTime);
+	audio->start(readMic);
+
+	qDebug()<<"frequency resolution" << sampleRate/audio->bufferSize();
    
 }
+
+void Window::readMicrophone(){
+
+	QByteArray datain = readMic->data();
+	readMic->buffer().clear();
+	readMic->reset();
+
+	for (int i =0;i<audio->bufferSize();i++){
+		fftinputbuffer[i] = (double)(datain.at(i));
+	}
+	
+	datain.clear();
+	fftw_execute(plan);
+	
+	//find maximum peak in fftouputbuffer
+	int peakIndex = 0;
+	double peakmag =0;
+
+	for (int i =1;i<(audio->bufferSize()/2)+1;i++){
+		double mag = sqrt(fftoutputbuffer[i][0]*fftoutputbuffer[i][0] +
+							fftoutputbuffer[i][1]*fftoutputbuffer[i][1]); //get magnitude
+
+		if(mag > peakmag){
+			peakmag = mag;
+			peakIndex=i;
+		}
+		
+	}
+	
+	if (peakmag > 10000) {
+		peakHertz = peakIndex * (sampleRate/audio->bufferSize());
+		qDebug() << peakHertz << "Hz";
+	}
+
+	peakIndex = 0;
+	peakmag=0;
+
+}
+
 void Window::stopRecording()
 {
     audio->stop();
-    destinationFile.close();
+    // destinationFile.close();
+	// qDebug() << readMic.data();
     delete audio;
 }
 void Window::handleStateChanged(QAudio::State newState)
@@ -284,13 +344,13 @@ void Window::handleStateChanged(QAudio::State newState)
         case QAudio::StoppedState:
             if (audio->error() != QAudio::NoError) {
                 // Error handling
-    pushbutton1->setText(tr("Error"));  // testing if this statement works
+    			pushbutton1->setText(tr("Error"));  // testing if this statement works
             } else {
                 // Finished recording
-   // testing if this statement works
-	pushbutton1->setEnabled(true);     
-	pushbutton2->setEnabled(true);
-	pushbutton3->setEnabled(true);
+   				// testing if this statement works
+				pushbutton1->setEnabled(true);     
+				pushbutton2->setEnabled(true);
+				pushbutton3->setEnabled(true);
             }
             break;
 
@@ -327,16 +387,22 @@ void Window::recognisingSlot()
     std::mt19937 rng(dev());
     std::uniform_int_distribution<std::mt19937::result_type> dist7(1,7); // distribution in range [1, 6]
    // std::cout << dist7(rng) << std::endl;
+  
+   
    if (dist7(rng)==1)
-   { 
-	   player = new QMediaPlayer;
+   {  
+	   
+	 player = new QMediaPlayer;
      player->setMedia(QUrl::fromLocalFile(QFileInfo("do.mp3").absoluteFilePath()));
 	 player->setVolume(90); 
-	 player->play();
+	 player->play();	   
 	 connect(dobutton, SIGNAL(clicked()), this, SLOT(DoPressedSlot()));
+	  
+
 	 }
   else if (dist7(rng)==2)
    { 
+	  
 	   player = new QMediaPlayer;
      player->setMedia(QUrl::fromLocalFile(QFileInfo("re.mp3").absoluteFilePath()));
 	 player->setVolume(90); 
@@ -427,3 +493,6 @@ void Window::quitApp()
 }
 
 
+//for(int i=0; i< n; i++) { v[i] = (double)(((int*)data)[i]) }; 
+//v[i] = reinterpret_cast<int*>(data)[i]; 
+//for(int i=0; i< n; i++) { v[i] = (double)(((int16_t*)data)[i]) }; 
