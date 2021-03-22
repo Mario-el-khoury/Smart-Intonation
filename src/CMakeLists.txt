@@ -14,6 +14,7 @@ SET(QT_USE_QTMULTIMEDIAWIDGETS TRUE)
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 find_package(Qt5 COMPONENTS Multimedia REQUIRED) 
 find_package(Qt5 COMPONENTS MultimediaWidgets REQUIRED) 
+
 FIND_PACKAGE( Qt5Multimedia REQUIRED )
 FIND_PACKAGE( Qt5MultimediaWidgets REQUIRED )
 
@@ -26,5 +27,7 @@ target_link_libraries(qwt-example Qt5::Widgets)
 target_link_libraries(qwt-example qwt-qt5)
 target_link_libraries(qwt-example Qt5::Multimedia)
 target_link_libraries(qwt-example Qt5::MultimediaWidgets)
+target_link_libraries(qwt-example fftw3)
+
 
 install(TARGETS qwt-example)
