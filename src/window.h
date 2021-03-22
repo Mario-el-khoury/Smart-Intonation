@@ -26,7 +26,7 @@ public:
 
 	~Window();
 
-	void timerEvent( QTimerEvent * );
+
 
 public slots:
 	
@@ -66,7 +66,8 @@ private:
 	QPushButton *labutton;
 	QPushButton *sibutton;
 	QPushButton *feedbackbutton;
-    
+  
+
 	QAudioRecorder *audioRecorder;
 	QMediaPlayer *player;
     QVideoWidget* videoWidget;
