@@ -299,7 +299,7 @@ void Window::readMicrophone(){
 		
 	}
 	
-	if (peakmag > 10000) {
+	if (peakmag > 20000) {
 		peakHertz = peakIndex * (sampleRate/audio->bufferSize());
 		qDebug() << peakHertz << "Hz";
 	}
@@ -395,7 +395,7 @@ void Window::recognisingSlot()
    if (dist7(rng)==1)
 	{  
 		player = new QMediaPlayer;
-		player->setMedia(QUrl::fromLocalFile(QFileInfo("do.mp3").absoluteFilePath()));
+		player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/do.mp3").absolutePath()));
 		player->setVolume(90); 
 		player->play();	   
 		connect(dobutton, SIGNAL(clicked()), this, SLOT(DoPressedSlot()));
@@ -404,7 +404,7 @@ void Window::recognisingSlot()
   else if (dist7(rng)==2)
    { 
 		player = new QMediaPlayer;
-		player->setMedia(QUrl::fromLocalFile(QFileInfo("re.mp3").absoluteFilePath()));
+		player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/re.mp3").absolutePath()));
 		player->setVolume(90); 
 		player->play();
 		connect(rebutton, SIGNAL(clicked()), this, SLOT(RePressedSlot()));
@@ -413,7 +413,7 @@ void Window::recognisingSlot()
   else if (dist7(rng)==3)
    { 
 		player = new QMediaPlayer;
-		player->setMedia(QUrl::fromLocalFile(QFileInfo("mi.mp3").absoluteFilePath()));
+		player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/mi.mp3").absolutePath()));
 		player->setVolume(90); 
 		player->play();
 		connect(mibutton, SIGNAL(clicked()), this, SLOT(MiPressedSlot()));
@@ -422,7 +422,7 @@ void Window::recognisingSlot()
   else if (dist7(rng)==4)
    { 
 		player = new QMediaPlayer;
-		player->setMedia(QUrl::fromLocalFile(QFileInfo("fa.mp3").absoluteFilePath()));
+	    player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/fa.mp3").absolutePath()));
 		player->setVolume(90); 
 		player->play();
 		connect(fabutton, SIGNAL(clicked()), this, SLOT(FaPressedSlot()));
@@ -430,7 +430,7 @@ void Window::recognisingSlot()
  else if (dist7(rng)==5)
    { 
 		player = new QMediaPlayer;
-		player->setMedia(QUrl::fromLocalFile(QFileInfo("so.mp3").absoluteFilePath()));
+		player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/so.mp3").absolutePath()));
 		player->setVolume(90); 
 		player->play();
 		connect(sobutton, SIGNAL(clicked()), this, SLOT(SoPressedSlot()));
@@ -438,7 +438,7 @@ void Window::recognisingSlot()
 else if (dist7(rng)==6)
    { 
 		player = new QMediaPlayer;
-		player->setMedia(QUrl::fromLocalFile(QFileInfo("la.mp3").absoluteFilePath()));
+		player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/la.mp3").absolutePath()));
 		player->setVolume(90); 
 		player->play();
 		connect(labutton, SIGNAL(clicked()), this, SLOT(LaPressedSlot()));
@@ -446,7 +446,7 @@ else if (dist7(rng)==6)
  else if (dist7(rng)==7)
    { 
 		player = new QMediaPlayer;
-		player->setMedia(QUrl::fromLocalFile(QFileInfo("si.mp3").absoluteFilePath()));
+		player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/si.mp3").absolutePath()));
 		player->setVolume(90); 
 		player->play();
 		connect(sibutton, SIGNAL(clicked()), this, SLOT(SiPressedSlot()));
