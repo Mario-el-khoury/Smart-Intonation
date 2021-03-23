@@ -11,105 +11,118 @@ Window::Window()
 {
 	QAudioInput* audio; // Class member
 	QFile destinationFile;
-	
-    //setStyleSheet("background-image:url(./tones.png)");  //set background
 	setWindowTitle("Welcome to the Smart Intonation Software!");  //set title
 
 	//set push buttons
 	pushbutton1 = new QPushButton;            
-	pushbutton1->setText(tr("Learning"));         //type on the button
-	pushbutton1->setFixedHeight(40);             //set a fixed height
-	pushbutton1->setFixedWidth(150);            //set a fixed width
+	pushbutton1->setText(tr("Learning"));                    //type on the button
+	pushbutton1->setFixedHeight(40);                         //set a fixed height
+	pushbutton1->setFixedWidth(150);                          //set a fixed width
+   // pushbutton1->setStyleSheet("background-color: yellow");  //set button color
+	pushbutton1->setStyleSheet("color: black; background-color: yellow"); // set text color
 
 	pushbutton2 = new QPushButton;
 	pushbutton2->setText(tr("Recognising the tones"));
 	pushbutton2->setFixedHeight(40);
 	pushbutton2->setFixedWidth(150);
+    pushbutton2->setStyleSheet("background-color: grey");
 
     pushbutton3 = new QPushButton;
 	pushbutton3->setText(tr("Testing"));
 	pushbutton3->setFixedHeight(40);
 	pushbutton3->setFixedWidth(150);
+	pushbutton3->setStyleSheet("background-color: green");
 
 	quitbutton = new QPushButton;
 	quitbutton->setText(tr("Quit App"));
 	quitbutton->setFixedHeight(30);
 	quitbutton->setFixedWidth(100);
+	quitbutton->setStyleSheet("background-color: red");
 
     stopbutton = new QPushButton;
 	stopbutton->setText(tr("stop"));
 	stopbutton->setFixedHeight(30);
 	stopbutton->setFixedWidth(100);
 	stopbutton->hide();
+    stopbutton->setStyleSheet("background-color: blue");
 
 	resumebutton = new QPushButton;
 	resumebutton->setText(tr("resume"));
 	resumebutton->setFixedHeight(30);
 	resumebutton->setFixedWidth(100);
 	resumebutton->hide();
+    resumebutton->setStyleSheet("background-color: aqua");
 
 	exitbutton = new QPushButton;
 	exitbutton->setText(tr("exit"));
 	exitbutton->setFixedHeight(30);
 	exitbutton->setFixedWidth(100);
 	exitbutton->hide();
+	exitbutton->setStyleSheet("background-color: red");
+
 
 	dobutton = new QPushButton;
 	dobutton->setText(tr("Do"));
-	dobutton->setFixedHeight(25);
-	dobutton->setFixedWidth(70);
+	dobutton->setFixedHeight(300);
+	dobutton->setFixedWidth(50);
 	dobutton->hide();
+	dobutton->setStyleSheet("color: black; background-color: yellow");
 
 	rebutton = new QPushButton;
 	rebutton->setText(tr("Re"));
-	rebutton->setFixedHeight(25);
-	rebutton->setFixedWidth(70);
+	rebutton->setFixedHeight(300);
+	rebutton->setFixedWidth(50);
 	rebutton->hide();
+	rebutton->setStyleSheet("color: black; background-color: red");
 
 	mibutton = new QPushButton;
 	mibutton->setText(tr("Mi"));
-	mibutton->setFixedHeight(25);
-	mibutton->setFixedWidth(70);
+	mibutton->setFixedHeight(300);
+	mibutton->setFixedWidth(50);
 	mibutton->hide();
+	mibutton->setStyleSheet("color: black; background-color: blue");
 
 	fabutton = new QPushButton;
 	fabutton->setText(tr("Fa"));
-	fabutton->setFixedHeight(25);
-	fabutton->setFixedWidth(70);
+	fabutton->setFixedHeight(300);
+	fabutton->setFixedWidth(50);
 	fabutton->hide();
+	fabutton->setStyleSheet("color: black; background-color: green");
 
 	sobutton = new QPushButton;
 	sobutton->setText(tr("So"));
-	sobutton->setFixedHeight(25);
-	sobutton->setFixedWidth(70);
+	sobutton->setFixedHeight(300);
+	sobutton->setFixedWidth(50);
 	sobutton->hide();
+	sobutton->setStyleSheet("color: black; background-color: aqua");
 
 	labutton = new QPushButton;
 	labutton->setText(tr("La"));
-	labutton->setFixedHeight(25);
-	labutton->setFixedWidth(70);
+	labutton->setFixedHeight(300);
+	labutton->setFixedWidth(50);
 	labutton->hide();
+	labutton->setStyleSheet("color: black; background-color: grey");
 
 	sibutton = new QPushButton;
 	sibutton->setText(tr("Si"));
-	sibutton->setFixedHeight(25);
-	sibutton->setFixedWidth(70);
+	sibutton->setFixedHeight(300);
+	sibutton->setFixedWidth(50);
 	sibutton->hide();
+	sibutton->setStyleSheet("color: black; background-color: Blue");
 
     feedbackbutton = new QPushButton;
 	feedbackbutton->setText(tr("feedback"));
-    feedbackbutton->setFixedHeight(25);
-	feedbackbutton->setFixedWidth(80);
+    feedbackbutton->setFixedHeight(40);
+	feedbackbutton->setFixedWidth(120);
 	feedbackbutton->hide();
-	//set pushbuttons colors
-	//setStyleSheet("QPushButton::checked{background-color: red;color: white;} "
-    //  "\n "
-    // "QPushButton{background-color:  black;color: white;}");
-					   
-    //QPushButton *pushbutton1 = new QPushButton(this);      // to open new window when pressing pushbutton
-    // QWidget *widget = new QWidget(this);
-    //widget->setWindowFlags(Qt::Window);
-     // widget->setWindowTitle("New Window");
+	feedbackbutton->setStyleSheet("color: black; background-color: grey");
+
+	
+
+		//QPushButton *pushbutton1 = new QPushButton(this);      // to open new window when pressing pushbutton
+		// QWidget *widget = new QWidget(this);
+		//widget->setWindowFlags(Qt::Window);
+		// widget->setWindowTitle("New Window");
    
 
   //// play slot///
@@ -306,31 +319,31 @@ void Window::readMicrophone(){
 
 	peakIndex = 0;
 	peakmag=0;
-    if (  (peakHertz >= 440) && (peakHertz < 510))
+    if (  (peakHertz >= 520) && (peakHertz < 587))
 		{
 			qDebug() << "DO";
 		}
-	else if (  (peakHertz >= 510) && (peakHertz < 587))
+	else if (  (peakHertz >= 587) && (peakHertz < 660))
 			{
 				qDebug() << "Re";
 			}
-	else if (  (peakHertz >= 587) && (peakHertz < 660))
+	else if (  (peakHertz >= 660) && (peakHertz < 783))
 			{
 				qDebug() << "Mi";
 			}	
-	else  if (  (peakHertz >= 660) && (peakHertz < 700))
+	else  if (  (peakHertz >= 783) && (peakHertz < 880))
 			{
 				qDebug() << "Fa";
 			} 
-	else if (  (peakHertz >= 700) && (peakHertz < 783))
+	else if (  (peakHertz >= 880) && (peakHertz < 987))
 			{
 				qDebug() << "So";
 			}
-	else if (  (peakHertz >= 783 ) && (peakHertz < 880))
+	else if (  (peakHertz >= 987 ) && (peakHertz < 1046))
 			{
 				qDebug() << "La";
 			}
-	else if (  (peakHertz >= 880 ) && (peakHertz < 980))
+	else if (  (peakHertz >= 1046 ) && (peakHertz < 1100))
 			{
 				qDebug() << "Si";
 			}		
