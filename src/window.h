@@ -91,8 +91,8 @@ private:
 
 	int count=0;
 
-	double sampleRate = 55000;
-	int bufferTime = 350; //time to hold in buffer in ms
+	double sampleRate = 48000;
+	int bufferTime = 500; //time to hold in buffer in ms
 
 	double peakHertz;
 
