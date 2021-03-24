@@ -7,36 +7,39 @@
 #include <iostream>
 #include <random>   // for random numbers
 #include <unistd.h>   // for delays   //usleep(3000000); sleep 3 seconds
+
+/* open the constructer of the project*/
+
 Window::Window() 
 {
 	QAudioInput* audio; // Class member
-	QFile destinationFile;
+	
 	setWindowTitle("Welcome to the Smart Intonation Software!");  //set title
 
 	//set push buttons
 	pushbutton1 = new QPushButton;            
 	pushbutton1->setText(tr("Learning"));                    //type on the button
 	pushbutton1->setFixedHeight(40);                         //set a fixed height
-	pushbutton1->setFixedWidth(150);                          //set a fixed width
-   // pushbutton1->setStyleSheet("background-color: yellow");  //set button color
-	pushbutton1->setStyleSheet("color: black; background-color: yellow"); // set text color
+	pushbutton1->setFixedWidth(180);                          //set a fixed width
+	pushbutton1->setStyleSheet("color: black; background-color: yellow"); // set text and button color
+	//pushbutton1->setStyleSheet(" background-color: yellow; border-style: outset; border-width: 2px; border-radius: 10px;border-color: beige; font: bold 14px;  min-width: 10em; padding: 6px");
 
 	pushbutton2 = new QPushButton;
 	pushbutton2->setText(tr("Recognising the tones"));
 	pushbutton2->setFixedHeight(40);
-	pushbutton2->setFixedWidth(150);
+	pushbutton2->setFixedWidth(180);
     pushbutton2->setStyleSheet("background-color: grey");
 
     pushbutton3 = new QPushButton;
 	pushbutton3->setText(tr("Testing"));
 	pushbutton3->setFixedHeight(40);
-	pushbutton3->setFixedWidth(150);
+	pushbutton3->setFixedWidth(180);
 	pushbutton3->setStyleSheet("background-color: green");
 
 	quitbutton = new QPushButton;
 	quitbutton->setText(tr("Quit App"));
 	quitbutton->setFixedHeight(30);
-	quitbutton->setFixedWidth(100);
+	quitbutton->setFixedWidth(150);
 	quitbutton->setStyleSheet("background-color: red");
 
     stopbutton = new QPushButton;
@@ -112,8 +115,8 @@ Window::Window()
 
     feedbackbutton = new QPushButton;
 	feedbackbutton->setText(tr("feedback"));
-    feedbackbutton->setFixedHeight(40);
-	feedbackbutton->setFixedWidth(120);
+    feedbackbutton->setFixedHeight(30);
+	feedbackbutton->setFixedWidth(100);
 	feedbackbutton->hide();
 	feedbackbutton->setStyleSheet("color: black; background-color: grey");
 
@@ -175,13 +178,12 @@ Window::Window()
 
 
 	fftbuffsize = (int)(sampleRate*((double)bufferTime/1000));
-	int fftbuffoutsize = (fftbuffsize/2)+1;  // changed by mario
+	int fftbuffoutsize = (fftbuffsize/2)+1; 
 	
 
 	fftinputbuffer = static_cast<double*> (fftw_malloc(fftbuffsize *sizeof(double)));  // no need for "new" cz fft is doing it 
 	fftoutputbuffer = static_cast<fftw_complex*> (fftw_malloc(fftbuffsize *sizeof(fftw_complex)));
 
-	
 	plan = fftw_plan_dft_r2c_1d(fftbuffsize,fftinputbuffer,fftoutputbuffer,FFTW_ESTIMATE);  // creating the plan
 	// fftw_execute(plan);
 }
@@ -223,6 +225,7 @@ void Window::resumeslot()
 
 void Window::exitslot()
 {   
+	audio->stop();	
 	exitbutton->hide();
     videoWidget->hide();
 	player->stop();  
@@ -312,41 +315,54 @@ void Window::readMicrophone(){
 		
 	}
 	
-	if (peakmag > 20000) {
+	if (peakmag > 10000) {
 		peakHertz = peakIndex * (sampleRate/audio->bufferSize());
 		qDebug() << peakHertz << "Hz";
 	}
 
 	peakIndex = 0;
 	peakmag=0;
-    if (  (peakHertz >= 520) && (peakHertz < 587))
+   
+    peakHertz /=  262.0 ;
+
+	while(peakHertz < 1)
+		peakHertz *= 2;
+
+	while(peakHertz > 2)
+		peakHertz /= 2 ;
+	
+ //  qDebug() << peakHertz;
+
+    if (  (peakHertz >= pow (2, -1.0/12.0)) && (peakHertz < pow ( 2,1.0/12.0)))
 		{
-			qDebug() << "DO";
+			qDebug() << "Do";
 		}
-	else if (  (peakHertz >= 587) && (peakHertz < 660))
+
+	else if (  (peakHertz >= pow ( 2,1.0/12.0)) && (peakHertz < pow ( 2,3.0/12.0) ))
 			{
 				qDebug() << "Re";
 			}
-	else if (  (peakHertz >= 660) && (peakHertz < 783))
+	else if (  (peakHertz >= pow ( 2,3.0/12.0)) && (peakHertz < pow ( 2,4.5/12.0)))
 			{
 				qDebug() << "Mi";
 			}	
-	else  if (  (peakHertz >= 783) && (peakHertz < 880))
+	else  if (  (peakHertz >= pow ( 2,4.5/12.0)) && (peakHertz < pow ( 2,6.0/12.0)))
 			{
 				qDebug() << "Fa";
 			} 
-	else if (  (peakHertz >= 880) && (peakHertz < 987))
+	else if (  (peakHertz >= pow ( 2,6.0/12.0))  && (peakHertz < pow ( 2, 8.0/12.0)))
 			{
 				qDebug() << "So";
 			}
-	else if (  (peakHertz >= 987 ) && (peakHertz < 1046))
+	else if (  (peakHertz >= pow ( 2,8.0/12.0)) && (peakHertz < pow ( 2,10.0/12.0)))
 			{
 				qDebug() << "La";
 			}
-	else if (  (peakHertz >= 1046 ) && (peakHertz < 1100))
+	else if (  (peakHertz >= pow ( 2,10.0/12.0)) && (peakHertz < pow ( 2,11.5/12.0)))
 			{
 				qDebug() << "Si";
 			}		
+	exitbutton->show();		
 }
 
 void Window::stopRecording()
@@ -466,6 +482,8 @@ else if (dist7(rng)==6)
 	 }	 
 
 }
+
+ /*                  */
 void Window::DoPressedSlot()
  {
     feedbackbutton->setText(tr("Well done!!"));
@@ -503,5 +521,7 @@ void Window::quitApp()
     Window::close();
    
 }
+
+
 
 
