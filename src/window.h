@@ -10,8 +10,8 @@
 #include <QDebug>
 #include <algorithm>
 #include <fftw3.h>
-
-
+#include <QTextEdit> 
+#include <QLineEdit>
 
 /** class definition 'Window' where every tone is generated any recieved using fft   */
 
@@ -44,8 +44,8 @@ public slots:
     /** function that starts taking microphone input  */
 		void AudioRecorderSlot();
 
-    /** function that decode microphone input  */
-		void recognisingSlot();
+    /** function that genrate random tone to test the user knowledge  */
+		void TestingSlot();
 
     /** function that exit(back) the video or any other sub-phase */
 		void exitslot();
@@ -100,15 +100,15 @@ private:
 	QPushButton *sobutton;
 	QPushButton *labutton;
 	QPushButton *sibutton;
-	QPushButton *feedbackbutton;
-  
-  /*! Different Qt pointers*/
+ 	QPushButton *feedbackbutton;
+	QLineEdit *text;
+	  /*! Different Qt pointers*/
 	QAudioRecorder *audioRecorder;
 	QMediaPlayer *player;
     QVideoWidget* videoWidget;
     QAudioInput* audio; 
 	QAudioFormat format;
-
+     
 
 	// layout elements from Qt itself http://qt-project.org/doc/qt-4.8/classes.html
 	QVBoxLayout  *vLayout;  // vertical layout
@@ -133,7 +133,7 @@ private:
 	double sampleRate = 48000; 
 
     /** variable to intialise the buffer time in ms  */
-	int bufferTime = 500; 
+	int bufferTime = 600.0; 
 
 	/** variable to store peakHeartz values */
 	double peakHertz;
