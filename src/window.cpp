@@ -106,12 +106,12 @@ Window::Window()
 	labutton->hide();
 	labutton->setStyleSheet("color: black; background-color: grey");
 
-	sibutton = new QPushButton;
-	sibutton->setText(tr("Si"));
-	sibutton->setFixedHeight(300);
-	sibutton->setFixedWidth(50);
-	sibutton->hide();
-	sibutton->setStyleSheet("color: black; background-color: Blue");
+	Tibutton = new QPushButton;
+	Tibutton->setText(tr("Ti"));
+	Tibutton->setFixedHeight(300);
+	Tibutton->setFixedWidth(50);
+	Tibutton->hide();
+	Tibutton->setStyleSheet("color: black; background-color: Blue");
 
     feedbackbutton = new QPushButton;
 	feedbackbutton->setText(tr("feedback"));
@@ -169,7 +169,7 @@ Window::Window()
 	hLayout->addWidget(fabutton);
 	hLayout->addWidget(sobutton);
 	hLayout->addWidget(labutton);
-	hLayout->addWidget(sibutton);
+	hLayout->addWidget(Tibutton);
     hLayout->addWidget(feedbackbutton);
 	hLayout->addWidget(exitbutton);
 	hLayout->addWidget(videoWidget);  
@@ -238,7 +238,7 @@ void Window::exitslot()
 	fabutton->hide();
 	sobutton->hide();
 	labutton->hide();
-	sibutton->hide();
+	Tibutton->hide();
 	feedbackbutton->hide();
     pushbutton2->setEnabled(true);
 	pushbutton3->setEnabled(true);
@@ -360,7 +360,7 @@ void Window::readMicrophone(){
 			}
 	else if (  (peakHertz >= pow ( 2,10.0/12.0)) && (peakHertz < pow ( 2,11.5/12.0)))
 			{
-				qDebug() << "Si";
+				qDebug() << "Ti";
 			}		
 	exitbutton->show();		
 }
@@ -412,7 +412,7 @@ void Window::recognisingSlot()
 	fabutton->show();
 	sobutton->show();
 	labutton->show();
-	sibutton->show();
+	Tibutton->show();
    	feedbackbutton->setText(tr("feedback"));
 	feedbackbutton->show();
 	std::random_device dev;
@@ -475,10 +475,10 @@ else if (dist7(rng)==6)
  else if (dist7(rng)==7)
    { 
 		player = new QMediaPlayer;
-		player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/si.mp3").absolutePath()));
+		player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/ti.mp3").absolutePath()));
 		player->setVolume(90); 
 		player->play();
-		connect(sibutton, SIGNAL(clicked()), this, SLOT(SiPressedSlot()));
+		connect(Tibutton, SIGNAL(clicked()), this, SLOT(TiPressedSlot()));
 	 }	 
 
 }
@@ -509,7 +509,7 @@ void Window::LaPressedSlot()
  {
     feedbackbutton->setText(tr("Well done!!"));
  }
-void Window::SiPressedSlot()
+void Window::TiPressedSlot()
  {
     feedbackbutton->setText(tr("Well done!!"));
  }

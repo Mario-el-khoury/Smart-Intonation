@@ -72,7 +72,7 @@ public slots:
 		void LaPressedSlot();
 	
 	/** function that confirm that Si is pressed */
-		void SiPressedSlot();
+		void TiPressedSlot();
 
     /** function that handle the state of the microphone */
 		void handleStateChanged(QAudio::State newState);
@@ -99,7 +99,7 @@ private:
 	QPushButton *fabutton;
 	QPushButton *sobutton;
 	QPushButton *labutton;
-	QPushButton *sibutton;
+	QPushButton *Tibutton;
 	QPushButton *feedbackbutton;
   
   /*! Different Qt pointers*/
