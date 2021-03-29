@@ -80,6 +80,8 @@ public slots:
     /** function that read mic data */
 		void readMicrophone();
 
+		void pianoplayer();
+
 // internal variables for the window class
 private:
 
@@ -99,8 +101,9 @@ private:
 	QPushButton *fabutton;
 	QPushButton *sobutton;
 	QPushButton *labutton;
-	QPushButton *Tibutton;
+	QPushButton *tibutton;
 	QPushButton *feedbackbutton;
+	QPushButton *piano;
   
   /*! Different Qt pointers*/
 	QAudioRecorder *audioRecorder;

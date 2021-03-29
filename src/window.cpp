@@ -36,6 +36,12 @@ Window::Window()
 	pushbutton3->setFixedWidth(180);
 	pushbutton3->setStyleSheet("background-color: green");
 
+	piano = new QPushButton;
+	piano->setText(tr("piano"));
+	piano->setFixedHeight(40);
+	piano->setFixedWidth(180);
+	piano->setStyleSheet("background-color: blue");
+
 	quitbutton = new QPushButton;
 	quitbutton->setText(tr("Quit App"));
 	quitbutton->setFixedHeight(30);
@@ -106,12 +112,12 @@ Window::Window()
 	labutton->hide();
 	labutton->setStyleSheet("color: black; background-color: grey");
 
-	Tibutton = new QPushButton;
-	Tibutton->setText(tr("Ti"));
-	Tibutton->setFixedHeight(300);
-	Tibutton->setFixedWidth(50);
-	Tibutton->hide();
-	Tibutton->setStyleSheet("color: black; background-color: Blue");
+	tibutton = new QPushButton;
+	tibutton->setText(tr("Ti"));
+	tibutton->setFixedHeight(300);
+	tibutton->setFixedWidth(50);
+	tibutton->hide();
+	tibutton->setStyleSheet("color: black; background-color: Blue");
 
     feedbackbutton = new QPushButton;
 	feedbackbutton->setText(tr("feedback"));
@@ -143,10 +149,12 @@ Window::Window()
 	connect(pushbutton3, SIGNAL(clicked()), this, SLOT(recognisingSlot()));  
 	connect(resumebutton, SIGNAL(clicked()), this, SLOT(resumeslot())); //connect resumebutton to resumeslot 
 	connect(exitbutton, SIGNAL(clicked()), this, SLOT(exitslot())); //connect exitbutton to exitslot
+	connect(piano,SIGNAL(clicked()), this, SLOT(pianoplayer()));
 
 	pushbutton1->show();
 	pushbutton2->show();
 	pushbutton3->show();
+	piano->show();
 	quitbutton->show();
     stopbutton->setDisabled(true); 
 	resumebutton->setDisabled(true);
@@ -156,6 +164,7 @@ Window::Window()
 	vLayout->addWidget(pushbutton1); 
 	vLayout->addWidget(pushbutton2);
 	vLayout->addWidget(pushbutton3);
+	vLayout->addWidget(piano);
     vLayout->addWidget(quitbutton);
 	
 	// plot horizontally 
@@ -169,7 +178,7 @@ Window::Window()
 	hLayout->addWidget(fabutton);
 	hLayout->addWidget(sobutton);
 	hLayout->addWidget(labutton);
-	hLayout->addWidget(Tibutton);
+	hLayout->addWidget(tibutton);
     hLayout->addWidget(feedbackbutton);
 	hLayout->addWidget(exitbutton);
 	hLayout->addWidget(videoWidget);  
@@ -238,7 +247,7 @@ void Window::exitslot()
 	fabutton->hide();
 	sobutton->hide();
 	labutton->hide();
-	Tibutton->hide();
+	tibutton->hide();
 	feedbackbutton->hide();
     pushbutton2->setEnabled(true);
 	pushbutton3->setEnabled(true);
@@ -412,7 +421,7 @@ void Window::recognisingSlot()
 	fabutton->show();
 	sobutton->show();
 	labutton->show();
-	Tibutton->show();
+	tibutton->show();
    	feedbackbutton->setText(tr("feedback"));
 	feedbackbutton->show();
 	std::random_device dev;
@@ -478,7 +487,7 @@ else if (dist7(rng)==6)
 		player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/ti.mp3").absolutePath()));
 		player->setVolume(90); 
 		player->play();
-		connect(Tibutton, SIGNAL(clicked()), this, SLOT(TiPressedSlot()));
+		connect(tibutton, SIGNAL(clicked()), this, SLOT(TiPressedSlot()));
 	 }	 
 
 }
@@ -487,33 +496,78 @@ else if (dist7(rng)==6)
 void Window::DoPressedSlot()
  {
     feedbackbutton->setText(tr("Well done!!"));
+	player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/do.mp3").absolutePath()));
+	player->setVolume(90); 
+	player->play();
  }
 
 void Window::RePressedSlot()
  {
     feedbackbutton->setText(tr("Well done!!"));
+	player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/re.mp3").absolutePath()));
+	player->setVolume(90); 
+	player->play();
  }
  void Window::MiPressedSlot()
  {
     feedbackbutton->setText(tr("Well done!!"));
+	player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/mi.mp3").absolutePath()));
+	player->setVolume(90); 
+	player->play();
  }
 void Window::FaPressedSlot()
  {
     feedbackbutton->setText(tr("Well done!!"));
+	player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/fa.mp3").absolutePath()));
+	player->setVolume(90); 
+	player->play();
  }
 void Window::SoPressedSlot()
  {
     feedbackbutton->setText(tr("Well done!!"));
+	player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/so.mp3").absolutePath()));
+	player->setVolume(90); 
+	player->play();
  }
 void Window::LaPressedSlot()
  {
     feedbackbutton->setText(tr("Well done!!"));
+	player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/la.mp3").absolutePath()));
+	player->setVolume(90); 
+	player->play();
  }
 void Window::TiPressedSlot()
  {
     feedbackbutton->setText(tr("Well done!!"));
+	player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/ti.mp3").absolutePath()));
+	player->setVolume(90); 
+	player->play();
  }
 
+void Window::pianoplayer()
+{
+	exitbutton->show();
+	dobutton->show();
+	rebutton->show();
+	mibutton->show();
+	fabutton->show();
+	sobutton->show();
+	labutton->show();
+	tibutton->show();
+	piano->setDisabled(true);
+	pushbutton1->setDisabled(true);
+	pushbutton2->setDisabled(true);
+	pushbutton3->setDisabled(true);
+	quitbutton->setDisabled(true);
+
+	connect(dobutton, SIGNAL(clicked()), this, SLOT(DoPressedSlot()));
+	connect(rebutton, SIGNAL(clicked()), this, SLOT(RePressedSlot()));
+	connect(mibutton, SIGNAL(clicked()), this, SLOT(MiPressedSlot()));
+	connect(fabutton, SIGNAL(clicked()), this, SLOT(FaPressedSlot()));
+	connect(sobutton, SIGNAL(clicked()), this, SLOT(SoPressedSlot()));
+	connect(labutton, SIGNAL(clicked()), this, SLOT(LaPressedSlot()));
+	connect(tibutton, SIGNAL(clicked()), this, SLOT(TiPressedSlot()));
+}
 
 //this function is used to quit the application
 void Window::quitApp()    
