@@ -63,6 +63,14 @@ Window::Window()
 	exitbutton->hide();
 	exitbutton->setStyleSheet("background-color: red");
 
+	audiostopbutton=new QPushButton;
+	audiostopbutton->setText(tr("stop"));
+	audiostopbutton->setFixedHeight(30);
+	audiostopbutton->setFixedWidth(100);
+	audiostopbutton->hide();
+	audiostopbutton->setStyleSheet("background-color: red");
+
+
 
 	dobutton = new QPushButton;
 	dobutton->setText(tr("Do"));
@@ -157,6 +165,8 @@ Window::Window()
 	/** Connect exitbutton to the exitslot that exit the video and other windows*/
 	connect(exitbutton, SIGNAL(clicked()), this, SLOT(exitslot())); //connect exitbutton to exitslot
 
+	connect(audiostopbutton, SIGNAL(clicked()),this, SLOT(audioexit()));
+
 	pushbutton1->show();
 	pushbutton2->show();
 	pushbutton3->show();
@@ -185,6 +195,7 @@ Window::Window()
 	hLayout->addWidget(sibutton);
     hLayout->addWidget(feedbackbutton);
 	hLayout->addWidget(exitbutton);
+	hLayout->addWidget(audiostopbutton);
 	hLayout->addWidget(videoWidget);  
 	hLayout->addWidget(text);
 	text->hide();
@@ -202,7 +213,6 @@ Window::Window()
 	plan = fftw_plan_dft_r2c_1d(fftbuffsize,fftinputbuffer,fftoutputbuffer,FFTW_ESTIMATE);  // creating the plan
 	// fftw_execute(plan);
 
-	   
 }
 
 Window::~Window() {
@@ -244,10 +254,15 @@ void Window::resumeslot()
     
 }
 
+void Window::audioexit(){
+	audio->stop();
+	audiostopbutton->hide();
+	this->exitslot();
+}
+
 void Window::exitslot()
 {   
-
-	audio->stop();	
+	
 	text->hide();
 	exitbutton->hide();
     videoWidget->hide();
@@ -274,6 +289,7 @@ void Window::exitslot()
 /// Audio Record whenever pushbutton2 is pressed///
 	void Window::AudioRecorderSlot()
 {	 
+
 	pushbutton3->setDisabled(true);
 	pushbutton1->setDisabled(true);
 	pushbutton2->setDisabled(true);
@@ -298,8 +314,9 @@ void Window::exitslot()
 	readmicarray = new QByteArray;
 	readMic = new QBuffer(readmicarray);
 	readMic->open(QIODevice::ReadWrite|QIODevice::Truncate);
-	audio->setNotifyInterval(bufferTime);
 	audio->start(readMic);
+	audio->setNotifyInterval(bufferTime);
+	
 	qDebug()<<"frequency resolution" << sampleRate/audio->bufferSize();
    
 }
@@ -320,7 +337,7 @@ void Window::readMicrophone(){
 	int peakIndex = 0;
 	double peakmag =0;
 	/** Variable to store the frequency in a string **/
-	QString textEditString;
+	// QString textEditString;
     /** find the magnitude of the signal */
 	for (int i =1;i<(audio->bufferSize()/2)+1;i++){
 		double mag = sqrt(fftoutputbuffer[i][0]*fftoutputbuffer[i][0] +
@@ -333,112 +350,128 @@ void Window::readMicrophone(){
 		
 	}
 	
-	if (peakmag > 10000) {
+	bool peakflag= false;
+	QString textEditString("Your voice frequency is ");
+
+	if (peakmag > 15000) {
 		peakHertz = peakIndex * (sampleRate/audio->bufferSize());
 		qDebug() << peakHertz << "Hz";
+		/** assign the frequency values to textEditString */
+		textEditString.append(QString("%L0").arg(peakHertz,0,'f',2));
+		peakflag = true;
 	}
 	/** convert double peakHertz to string strpeakHertz and put no number after the commas*/
-  	QString  strpeakHertz = QString::number(peakHertz, 'f', 0 );
+  	// QString  strpeakHertz = QString::number(peakHertz, 'f', 0 );
 	peakIndex = 0;
 	peakmag=0;
-   
-    peakHertz /=  440.00 ;
 
-	while(peakHertz < 1)
-		peakHertz *= 2;
+   	if (peakflag)
+   		{
 
-	while(peakHertz > 2)
-		peakHertz /= 2 ;
+		// peakHertz /=  261.63 ;	//c major
+		peakHertz /= peakHertzScale;
+		
 
-    if (  (peakHertz >= pow (2, -1.0/12.0)) && (peakHertz < pow ( 2,1.0/12.0)))
-		{   
-			/** terminal plot */
-			qDebug() << "Do";
-			/** assign the first string to textEditString */
-			QString textEditString("Your voice frequency is ");	
-			/** assign the frequency values to textEditString */
-   	 		textEditString.append(strpeakHertz );	
-			/** assign the second string to textEditString depending on the tone */	
-   			textEditString.append("Hz, its a Do");
-			/** assing the textEditTring to the text showed on the window */   
-	     	text->setText(textEditString);
+		while(peakHertz < pow (2,-1/12.0))  //0.94
+			peakHertz *= 2;
 
-		}
+		while(peakHertz > pow (2,11.5/12.0)) //1.9
+			peakHertz /= 2 ;
 
-	else if (  (peakHertz >= pow ( 2,1.0/12.0)) && (peakHertz < pow ( 2,3.0/12.0) ))
-			{
-				qDebug() << "Re";
-				/** assign the first string to textEditString */
-				QString textEditString("Your voice frequency is ");	
-				/** assign the frequency values to textEditString */
-   	 			textEditString.append(strpeakHertz );	
+		if (  (peakHertz >= pow (2,	-1.0/12.0)) && (peakHertz < pow ( 2,1.0/12.0)))
+			{   
+				double note = pow (2, 0.0/12.0);
+				if (peakHertz == note)	{textEditString.append("bang on!");}
+				else if (peakHertz > note)	{textEditString.append("high!");}
+				else if (peakHertz < note)	{textEditString.append("low!");}
+
+
+				/** terminal plot */
+				qDebug() << "Do";
 				/** assign the second string to textEditString depending on the tone */	
-   				textEditString.append("Hz, its a Re");
+				textEditString.append("Hz, its a Do");
 				/** assing the textEditTring to the text showed on the window */   
-	    		text->setText(textEditString);
+				
+
 			}
-	else if (  (peakHertz >= pow ( 2,3.0/12.0)) && (peakHertz < pow ( 2,4.5/12.0)))
-			{
-				qDebug() << "Mi";
-				/** assign the first string to textEditString */
-				QString textEditString("Your voice frequency is ");	
-				/** assign the frequency values to textEditString */
-   	 			textEditString.append(strpeakHertz );	
-				/** assign the second string to textEditString depending on the tone */	
-				textEditString.append("Hz, its a Mi");
-				/** assing the textEditTring to the text showed on the window */  
-	    		text->setText(textEditString);
-			}	
-	else  if (  (peakHertz >= pow ( 2,4.5/12.0)) && (peakHertz < pow ( 2,6.0/12.0)))
-			{
-				qDebug() << "Fa";
-				/** assign the first string to textEditString */
-				QString textEditString("Your voice frequency is ");	
-				/** assign the frequency values to textEditString */
-   	 			textEditString.append(strpeakHertz );	
-				/** assign the second string to textEditString depending on the tone */	
-				textEditString.append("Hz, its a Fa");
-				/** assing the textEditTring to the text showed on the window */ 
-	    		text->setText(textEditString);
-			} 
-	else if (  (peakHertz >= pow ( 2,6.0/12.0))  && (peakHertz < pow ( 2, 8.0/12.0)))
-			{
-				qDebug() << "So";
-				/** assign the first string to textEditString */
-				QString textEditString("Your voice frequency is ");	
-				/** assign the frequency values to textEditString */
-   	 			textEditString.append(strpeakHertz );	
-				/** assign the second string to textEditString depending on the tone */	
-				textEditString.append("Hz, its a So");
-				/** assing the textEditTring to the text showed on the window */ 
-	    		text->setText(textEditString);
-			}
-	else if (  (peakHertz >= pow ( 2,8.0/12.0)) && (peakHertz < pow ( 2,10.0/12.0)))
-			{
-				qDebug() << "La";
-				/** assign the first string to textEditString */
-				QString textEditString("Your voice frequency is ");	
-				/** assign the frequency values to textEditString */
-   	 			textEditString.append(strpeakHertz );	
-				/** assign the second string to textEditString depending on the tone */	
-				textEditString.append("Hz, its a La");
-				/** assing the textEditTring to the text showed on the window */ 
-	    		text->setText(textEditString);
-			}
-	else if (  (peakHertz >= pow ( 2,10.0/12.0)) && (peakHertz < pow ( 2,11.5/12.0)))
-			{
-				qDebug() << "Si";
-				/** assign the first string to textEditString */
-				QString textEditString("Your voice frequency is ");	
-				/** assign the frequency values to textEditString */
-   	 			textEditString.append(strpeakHertz );	
-				/** assign the second string to textEditString depending on the tone */	
-				textEditString.append("Hz, its a Si");
-				/** assing the textEditTring to the text showed on the window */ 
-	    		text->setText(textEditString);
-			}	
-			
-	exitbutton->show();	
+
+		else if (  (peakHertz >= pow ( 2,1.0/12.0)) && (peakHertz < pow ( 2,3.0/12.0) ))
+				{
+					qDebug() << "Re";
+		            double note = pow (2, 2.0/12.0);
+					if (peakHertz == note)	{textEditString.append("bang on!");}
+					else if (peakHertz > note)	{textEditString.append("high!");}
+					else if (peakHertz < note)	{textEditString.append("low!");}
+
+					/** assign the second string to textEditString depending on the tone */	
+					textEditString.append("Hz, its a Re");
+					/** assing the textEditTring to the text showed on the window */   
+					
+				}
+		else if (  (peakHertz >= pow ( 2,3.0/12.0)) && (peakHertz < pow ( 2,4.5/12.0)))
+				{
+					qDebug() << "Mi";
+					double note = pow (2, 3.75/12.0);
+					if (peakHertz == note)	{textEditString.append("bang on!");}
+					else if (peakHertz > note)	{textEditString.append("high!");}
+					else if (peakHertz < note)	{textEditString.append("low!");}
+
+					/** assign the second string to textEditString depending on the tone */	
+					textEditString.append("Hz, its a Mi");
+					/** assing the textEditTring to the text showed on the window */  
+					
+				}	
+		else  if (  (peakHertz >= pow ( 2,4.5/12.0)) && (peakHertz < pow ( 2,6.0/12.0)))
+				{
+					qDebug() << "Fa";
+					double note = pow (2, 5.25/12.0);
+					if (peakHertz == note)	{textEditString.append("bang on!");}
+					else if (peakHertz > note)	{textEditString.append("high!");}
+					else if (peakHertz < note)	{textEditString.append("low!");}
+					/** assign the second string to textEditString depending on the tone */	
+					textEditString.append("Hz, its a Fa");
+					/** assing the textEditTring to the text showed on the window */ 
+					
+				} 
+		else if (  (peakHertz >= pow ( 2,6.0/12.0))  && (peakHertz < pow ( 2, 8.0/12.0)))
+				{
+					qDebug() << "So";
+					double note = pow (2, 7.0/12.0);
+					if (peakHertz == note)	{textEditString.append("bang on!");}
+					else if (peakHertz > note)	{textEditString.append("high!");}
+					else if (peakHertz < note)	{textEditString.append("low!");}
+					/** assign the second string to textEditString depending on the tone */	
+					textEditString.append("Hz, its a So");
+					/** assing the textEditTring to the text showed on the window */ 
+					
+				}
+		else if (  (peakHertz >= pow ( 2,8.0/12.0)) && (peakHertz < pow ( 2,10.0/12.0)))
+				{
+					qDebug() << "La";
+					double note = pow (2, 9.0/12.0);
+					if (peakHertz == note)	{textEditString.append("bang on!");}
+					else if (peakHertz > note)	{textEditString.append("high!");}
+					else if (peakHertz < note)	{textEditString.append("low!");}
+					/** assign the second string to textEditString depending on the tone */	
+					textEditString.append("Hz, its a La");
+					/** assing the textEditTring to the text showed on the window */ 
+					
+				}
+		else if (  (peakHertz >= pow ( 2,10.0/12.0)) && (peakHertz < pow ( 2,11.5/12.0)))
+				{
+					qDebug() << "Si";
+		    		 double note = pow (2, 10.75/12.0);
+					if (peakHertz == note)	{textEditString.append("bang on!");}
+					else if (peakHertz > note)	{textEditString.append("high!");}
+					else if (peakHertz < note)	{textEditString.append("low!");}
+					/** assign the second string to textEditString depending on the tone */	
+					textEditString.append("Hz, its a Si");
+					/** assing the textEditTring to the text showed on the window */ 
+					
+				}	
+   }
+	text->setText(textEditString);
+	audiostopbutton->show();	
 	text->show();	
 
 }
@@ -580,7 +613,8 @@ else if (dist7(rng)==6)
 		connect(labutton, SIGNAL(clicked()), this, SLOT(LaPressedSlot()));
 	 }	 
  else if (dist7(rng)==7)
-   {    /** reset player from begining */
+   {   
+	    /** reset player from begining */
 		player = new QMediaPlayer;
 		/** Assign the si.mp3 to player */
 	 	player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/si.mp3").absolutePath()));
