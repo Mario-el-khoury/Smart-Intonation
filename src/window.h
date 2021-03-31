@@ -13,6 +13,8 @@
 #include <QTextEdit> 
 #include <QLineEdit>
 
+// {a=440.00, b=493.88, c=523.25, d=587.33, e=659.25, f=698.46, g=783.99};
+
 /** class definition 'Window' where every tone is generated any recieved using fft   */
 
 class Window : public QWidget
@@ -80,6 +82,8 @@ public slots:
     /** function that read mic data */
 		void readMicrophone();
 
+		void audioexit();
+
 // internal variables for the window class
 private:
 
@@ -92,7 +96,7 @@ private:
     QPushButton *quitbutton;
 	QPushButton *stopbutton;
 	QPushButton *resumebutton;
-	QPushButton *exitbutton;
+	QPushButton *exitbutton, *audiostopbutton;
 	QPushButton *dobutton;
 	QPushButton *rebutton;
 	QPushButton *mibutton;
@@ -131,12 +135,15 @@ private:
 
     /** variable to intialise the value of sampleRate */
 	double sampleRate = 48000; 
+	
 
     /** variable to intialise the buffer time in ms  */
 	int bufferTime = 600.0; 
 
 	/** variable to store peakHeartz values */
 	double peakHertz;
+
+	double peakHertzScale =523.25;
 
     /** pointer to access readmicarray values */
 	QByteArray* readmicarray;
