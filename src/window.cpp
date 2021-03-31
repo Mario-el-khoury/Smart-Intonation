@@ -8,7 +8,7 @@
 #include <random>   // for random numbers
 #include <unistd.h>   // for delays   
 
-/* open the constructer of the project*/
+// open the constructer of the project
 
 Window::Window() 
 {
@@ -16,7 +16,7 @@ Window::Window()
 	
 	setWindowTitle("Welcome to the Smart Intonation Software!");  //set title
 
-	/** set push buttons */
+	// set push buttons 
 	pushbutton1 = new QPushButton;            
 	pushbutton1->setText(tr("Learning"));                    //type on the button
 	pushbutton1->setFixedHeight(40);                         //set a fixed height
@@ -139,30 +139,30 @@ Window::Window()
     // widget->setWindowTitle("New Window");
    
 
-    /** Player  declaration*/
+    // Player  declaration
      player = new QMediaPlayer;
-    /** Set player as a C-scale video located in the src directory */
+    // Set player as a C-scale video located in the src directory 
      player->setMedia(QUrl::fromLocalFile(QFileInfo("C-scale.mp4").absoluteFilePath()));
-	/** Set sound volume */
+	// Set sound volume 
 	 player->setVolume(50);   
-	/** Intialise video widget */       
+	// Intialise video widget        
 	 videoWidget = new QVideoWidget;
-	/** Allocate the video to Player */
+	// Allocate the video to Player 
      player->setVideoOutput(videoWidget);
   
-    /** Connect pushbutton1 to the playslot that starts the video */
+    // Connect pushbutton1 to the playslot that starts the video 
 	connect(pushbutton1, SIGNAL(clicked()), this, SLOT(playslot()));  
-	/** Connect stopbutton to the pauseslot that pause the video */
+	// Connect stopbutton to the pauseslot that pause the video 
 	connect(stopbutton, SIGNAL(clicked()), this, SLOT(pauseslot()));  
-	/** Connect pushbutton2 to the AudioRecorderSlot that take the audio input */
+	// Connect pushbutton2 to the AudioRecorderSlot that take the audio input 
 	connect(pushbutton2, SIGNAL(clicked()), this, SLOT(AudioRecorderSlot()));
-	/** Connect quitbutton to the quitApp that quit the main window */
+	// Connect quitbutton to the quitApp that quit the main window 
 	connect(quitbutton, SIGNAL(clicked()), this, SLOT(quitApp()));
-	/** Connect pushbutton3 to the TestingSlot that genrate random tones to the user to recognise it */
+	// Connect pushbutton3 to the TestingSlot that genrate random tones to the user to recognise it 
 	connect(pushbutton3, SIGNAL(clicked()), this, SLOT(TestingSlot()));  
-	/** Connect resumebutton to the resumeslot that resume the video */
+	// Connect resumebutton to the resumeslot that resume the video 
 	connect(resumebutton, SIGNAL(clicked()), this, SLOT(resumeslot())); 
-	/** Connect exitbutton to the exitslot that exit the video and other windows*/
+	// Connect exitbutton to the exitslot that exit the video and other windows
 	connect(exitbutton, SIGNAL(clicked()), this, SLOT(exitslot())); //connect exitbutton to exitslot
 
 	connect(audiostopbutton, SIGNAL(clicked()),this, SLOT(audioexit()));
@@ -216,7 +216,7 @@ Window::Window()
 }
 
 Window::~Window() {
-	/** destroy fftw function */
+	// destroy fftw function 
 	fftw_destroy_plan(plan);
 	fftw_cleanup();
 }
@@ -230,9 +230,9 @@ void Window::playslot()
 	resumebutton->show();
 
     videoWidget->show();
-	/** video will play */
+	// video will play 
     player->play();   
-	 /** disable every button in the app while listening to avoid conflicts  */           
+	 // disable every button in the app while listening to avoid conflicts             
 	pushbutton1->setDisabled(true);     
 	pushbutton2->setDisabled(true);
 	pushbutton3->setDisabled(true);
@@ -336,9 +336,9 @@ void Window::readMicrophone(){
 	//find maximum peak in fftouputbuffer
 	int peakIndex = 0;
 	double peakmag =0;
-	/** Variable to store the frequency in a string **/
+	// Variable to store the frequency in a string *
 	// QString textEditString;
-    /** find the magnitude of the signal */
+    // find the magnitude of the signal 
 	for (int i =1;i<(audio->bufferSize()/2)+1;i++){
 		double mag = sqrt(fftoutputbuffer[i][0]*fftoutputbuffer[i][0] +
 							fftoutputbuffer[i][1]*fftoutputbuffer[i][1]); //get magnitude
@@ -356,11 +356,11 @@ void Window::readMicrophone(){
 	if (peakmag > 15000) {
 		peakHertz = peakIndex * (sampleRate/audio->bufferSize());
 		qDebug() << peakHertz << "Hz";
-		/** assign the frequency values to textEditString */
+		// assign the frequency values to textEditString 
 		textEditString.append(QString("%L0").arg(peakHertz,0,'f',2));
 		peakflag = true;
 	}
-	/** convert double peakHertz to string strpeakHertz and put no number after the commas*/
+	// convert double peakHertz to string strpeakHertz and put no number after the commas
   	// QString  strpeakHertz = QString::number(peakHertz, 'f', 0 );
 	peakIndex = 0;
 	peakmag=0;
@@ -386,11 +386,11 @@ void Window::readMicrophone(){
 				else if (peakHertz < note)	{textEditString.append("low!");}
 
 
-				/** terminal plot */
+				// terminal plot 
 				qDebug() << "Do";
-				/** assign the second string to textEditString depending on the tone */	
+				// assign the second string to textEditString depending on the tone 	
 				textEditString.append("Hz, its a Do");
-				/** assing the textEditTring to the text showed on the window */   
+				// assing the textEditTring to the text showed on the window    
 				
 
 			}
@@ -403,9 +403,9 @@ void Window::readMicrophone(){
 					else if (peakHertz > note)	{textEditString.append("high!");}
 					else if (peakHertz < note)	{textEditString.append("low!");}
 
-					/** assign the second string to textEditString depending on the tone */	
+					// assign the second string to textEditString depending on the tone 	
 					textEditString.append("Hz, its a Re");
-					/** assing the textEditTring to the text showed on the window */   
+					// assing the textEditTring to the text showed on the window    
 					
 				}
 		else if (  (peakHertz >= pow ( 2,3.0/12.0)) && (peakHertz < pow ( 2,4.5/12.0)))
@@ -416,9 +416,9 @@ void Window::readMicrophone(){
 					else if (peakHertz > note)	{textEditString.append("high!");}
 					else if (peakHertz < note)	{textEditString.append("low!");}
 
-					/** assign the second string to textEditString depending on the tone */	
+					// assign the second string to textEditString depending on the tone 	
 					textEditString.append("Hz, its a Mi");
-					/** assing the textEditTring to the text showed on the window */  
+					 
 					
 				}	
 		else  if (  (peakHertz >= pow ( 2,4.5/12.0)) && (peakHertz < pow ( 2,6.0/12.0)))
@@ -428,9 +428,9 @@ void Window::readMicrophone(){
 					if (peakHertz == note)	{textEditString.append("bang on!");}
 					else if (peakHertz > note)	{textEditString.append("high!");}
 					else if (peakHertz < note)	{textEditString.append("low!");}
-					/** assign the second string to textEditString depending on the tone */	
+					// assign the second string to textEditString depending on the tone 	
 					textEditString.append("Hz, its a Fa");
-					/** assing the textEditTring to the text showed on the window */ 
+				
 					
 				} 
 		else if (  (peakHertz >= pow ( 2,6.0/12.0))  && (peakHertz < pow ( 2, 8.0/12.0)))
@@ -440,9 +440,9 @@ void Window::readMicrophone(){
 					if (peakHertz == note)	{textEditString.append("bang on!");}
 					else if (peakHertz > note)	{textEditString.append("high!");}
 					else if (peakHertz < note)	{textEditString.append("low!");}
-					/** assign the second string to textEditString depending on the tone */	
+					// assign the second string to textEditString depending on the tone 	
 					textEditString.append("Hz, its a So");
-					/** assing the textEditTring to the text showed on the window */ 
+					
 					
 				}
 		else if (  (peakHertz >= pow ( 2,8.0/12.0)) && (peakHertz < pow ( 2,10.0/12.0)))
@@ -452,9 +452,9 @@ void Window::readMicrophone(){
 					if (peakHertz == note)	{textEditString.append("bang on!");}
 					else if (peakHertz > note)	{textEditString.append("high!");}
 					else if (peakHertz < note)	{textEditString.append("low!");}
-					/** assign the second string to textEditString depending on the tone */	
+					// assign the second string to textEditString depending on the tone 	
 					textEditString.append("Hz, its a La");
-					/** assing the textEditTring to the text showed on the window */ 
+					 
 					
 				}
 		else if (  (peakHertz >= pow ( 2,10.0/12.0)) && (peakHertz < pow ( 2,11.5/12.0)))
@@ -464,12 +464,13 @@ void Window::readMicrophone(){
 					if (peakHertz == note)	{textEditString.append("bang on!");}
 					else if (peakHertz > note)	{textEditString.append("high!");}
 					else if (peakHertz < note)	{textEditString.append("low!");}
-					/** assign the second string to textEditString depending on the tone */	
+					// assign the second string to textEditString depending on the tone 	
 					textEditString.append("Hz, its a Si");
-					/** assing the textEditTring to the text showed on the window */ 
+				 
 					
 				}	
    }
+   	// assing the textEditTring to the text showed on the window 
 	text->setText(textEditString);
 	audiostopbutton->show();	
 	text->show();	
@@ -488,7 +489,7 @@ void Window::handleStateChanged(QAudio::State newState)
                 // Error handling
     			pushbutton1->setText(tr("Error"));  // testing if this statement works
             } else {
-                /** Finished recording */
+                // Finished recording 
    				// testing if this statement works
 				pushbutton1->setEnabled(true);     
 				pushbutton2->setEnabled(true);
@@ -533,102 +534,102 @@ void Window::TestingSlot()
    
    if (dist7(rng)==1)
 	{   
-		/** reset player from begining */
+		// reset player from begining 
 		player = new QMediaPlayer;
-		/** Assign the do.mp3 to player */
+		// Assign the do.mp3 to player 
 		player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/do.mp3").absolutePath()));
-		/** Set player volume */
+		// Set player volume 
 		player->setVolume(90); 
-		/** Play the player audio */
+		// Play the player audio 
 		player->play();	  
-		/** Connect dobutton to detect if do is pressed by the user */ 
+		// Connect dobutton to detect if do is pressed by the user  
 		connect(dobutton, SIGNAL(clicked()), this, SLOT(DoPressedSlot()));
 
 	}
   else if (dist7(rng)==2)
    { 
-	    /** reset player from begining */
+	    // reset player from begining 
 		player = new QMediaPlayer;
-		/** Assign the re.mp3 to player */
+		// Assign the re.mp3 to player 
 	 	player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/re.mp3").absolutePath()));
-		/** Set player volume */
+		// Set player volume 
 		player->setVolume(90); 
-		/** Play the player audio */
+		// Play the player audio 
 		player->play();	  
-		/** Connect dobutton to detect if re is pressed by the user */ 
+		// Connect dobutton to detect if re is pressed by the user  
 		connect(rebutton, SIGNAL(clicked()), this, SLOT(RePressedSlot()));
 
 	 }
   else if (dist7(rng)==3)
    {  
-	    /** reset player from begining */
+	    // reset player from begining 
 		player = new QMediaPlayer;
-		/** Assign the mi.mp3 to player */
+		// Assign the mi.mp3 to player 
 	 	player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/mi.mp3").absolutePath()));
-		/** Set player volume */
+		// Set player volume 
 		player->setVolume(90); 
-		/** Play the player audio */
+		// Play the player audio 
 		player->play();	  
-		/** Connect dobutton to detect if mi is pressed by the user */ 
+		// Connect dobutton to detect if mi is pressed by the user  
 		connect(mibutton, SIGNAL(clicked()), this, SLOT(MiPressedSlot()));
 	}
 	 
   else if (dist7(rng)==4)
    {    
-	    /** reset player from begining */
+	    // reset player from begining 
 		player = new QMediaPlayer;
-	 	/** Assign the fa.mp3 to player */
+	 	// Assign the fa.mp3 to player 
 	 	player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/fa.mp3").absolutePath()));
-		/** Set player volume */
+		// Set player volume 
 		player->setVolume(90); 
-		/** Play the player audio */
+		// Play the player audio 
 		player->play();	  
-		/** Connect dobutton to detect if fa is pressed by the user */ 
+		// Connect dobutton to detect if fa is pressed by the user  
 		connect(fabutton, SIGNAL(clicked()), this, SLOT(FaPressedSlot()));
    }
  else if (dist7(rng)==5)
    {    
-	    /** reset player from begining */
+	    // reset player from begining 
 		player = new QMediaPlayer;
-		/** Assign the so.mp3 to player */
+		// Assign the so.mp3 to player 
 	 	player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/so.mp3").absolutePath()));
-		/** Set player volume */
+		// Set player volume 
 		player->setVolume(90); 
-		/** Play the player audio */
+		// Play the player audio 
 		player->play();	  
-		/** Connect dobutton to detect if so is pressed by the user */ 
+		// Connect dobutton to detect if so is pressed by the user  
 		connect(sobutton, SIGNAL(clicked()), this, SLOT(SoPressedSlot()));
 	}	 
 else if (dist7(rng)==6)
    {   
-	    /** reset player from begining */
+	    // reset player from begining 
 		player = new QMediaPlayer;
-		/** Assign the la.mp3 to player */
+		// Assign the la.mp3 to player 
 	 	player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/la.mp3").absolutePath()));
-		/** Set player volume */
+		// Set player volume 
 		player->setVolume(90); 
-		/** Play the player audio */
+		// Play the player audio 
 		player->play();	  
-		/** Connect dobutton to detect if la is pressed by the user */ 
+		// Connect dobutton to detect if la is pressed by the user  
 		connect(labutton, SIGNAL(clicked()), this, SLOT(LaPressedSlot()));
 	 }	 
  else if (dist7(rng)==7)
    {   
-	    /** reset player from begining */
+	    // reset player from begining 
 		player = new QMediaPlayer;
-		/** Assign the si.mp3 to player */
+		// Assign the si.mp3 to player 
 	 	player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/si.mp3").absolutePath()));
-		/** Set player volume */
+		// Set player volume 
 		player->setVolume(90); 
-		/** Play the player audio */
+		// Play the player audio 
 		player->play();	  
-		/** Connect dobutton to detect if si is pressed by the user */ 
+		// Connect dobutton to detect if si is pressed by the user  
 		connect(sibutton, SIGNAL(clicked()), this, SLOT(SiPressedSlot()));
 	 }	 
 
 }
 
- /*                  */
+                
 void Window::DoPressedSlot()
 	{
 		feedbackbutton->setText(tr("Well done!!"));
@@ -660,7 +661,7 @@ void Window::SiPressedSlot()
 	}
 
  
-/**  Function is used to quit the application */
+//  Function is used to quit the application 
 void Window::quitApp()    
 	{ 
    		 Window::close();
