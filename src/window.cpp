@@ -70,8 +70,6 @@ Window::Window()
 	audiostopbutton->hide();
 	audiostopbutton->setStyleSheet("background-color: red");
 
-
-
 	dobutton = new QPushButton;
 	dobutton->setText(tr("Do"));
 	dobutton->setFixedHeight(300);
@@ -132,7 +130,23 @@ Window::Window()
     text= new QLineEdit();
 	text->setReadOnly(true);
 	text->setFixedHeight(30);
-	text->setFixedWidth(300);
+	text->setFixedWidth(100);
+	text->hide();
+    //text->setStyleSheet("color: black; background-color: red");
+
+    text2= new QLineEdit();
+	text2->setReadOnly(true);
+	text2->setFixedHeight(30);
+	text2->setFixedWidth(100);
+	text2->hide();
+    //text2->setStyleSheet("color: black; background-color: red");
+
+	text3= new QLineEdit();
+	text3->setReadOnly(true);
+	text3->setFixedHeight(30);
+	text3->setFixedWidth(100);
+	text3->hide();
+    //text3->setStyleSheet("color: black; background-color: red");
 	//QPushButton *pushbutton1 = new QPushButton(this);      // to open new window when pressing pushbutton
     // QWidget *widget = new QWidget(this);
     //widget->setWindowFlags(Qt::Window);
@@ -198,7 +212,10 @@ Window::Window()
 	hLayout->addWidget(audiostopbutton);
 	hLayout->addWidget(videoWidget);  
 	hLayout->addWidget(text);
-	text->hide();
+	hLayout->addWidget(text2);
+	hLayout->addWidget(text3);
+	
+
 	videoWidget->hide();
 	setLayout(hLayout);
 
@@ -264,6 +281,8 @@ void Window::exitslot()
 {   
 	
 	text->hide();
+	text2->hide();
+	text3->hide();
 	exitbutton->hide();
     videoWidget->hide();
 	player->stop();  
@@ -336,8 +355,6 @@ void Window::readMicrophone(){
 	//find maximum peak in fftouputbuffer
 	int peakIndex = 0;
 	double peakmag =0;
-	// Variable to store the frequency in a string *
-	// QString textEditString;
     // find the magnitude of the signal 
 	for (int i =1;i<(audio->bufferSize()/2)+1;i++){
 		double mag = sqrt(fftoutputbuffer[i][0]*fftoutputbuffer[i][0] +
@@ -372,26 +389,46 @@ void Window::readMicrophone(){
 		peakHertz /= peakHertzScale;
 		
 
-		while(peakHertz < pow (2,-1/12.0))  //0.94
+		//while(peakHertz < pow (2,-1/12.0))  //0.94
+		while(peakHertz < 1)
 			peakHertz *= 2;
 
-		while(peakHertz > pow (2,11.5/12.0)) //1.9
+		//while(peakHertz > pow (2,11.5/12.0)) //1.94
+		while(peakHertz > 2)
 			peakHertz /= 2 ;
 
-		if (  (peakHertz >= pow (2,	-1.0/12.0)) && (peakHertz < pow ( 2,1.0/12.0)))
+		if   ((peakHertz >= pow (2,	-1.0/12.0)) && (peakHertz < pow ( 2,1.0/12.0)))
 			{   
 				double note = pow (2, 0.0/12.0);
-				if (peakHertz == note)	{textEditString.append("bang on!");}
-				else if (peakHertz > note)	{textEditString.append("high!");}
-				else if (peakHertz < note)	{textEditString.append("low!");}
-
-
+				 
+ 			if ((peakHertz <= pow (2, 0.3/12.0))&& (peakHertz >= pow (2,-0.3/12.0)))	{
+						text->clear();	
+						text3->clear();
+						text2->setText("Do, Bang On!");
+						text->setStyleSheet("color: black; background-color: white");
+						text3->setStyleSheet("color: black; background-color: white");
+						text2->setStyleSheet("color: black; background-color: green");
+					}
+			 else if ((peakHertz > pow (2, 0.3/12.0)) &&  (peakHertz < pow ( 2,1.0/12.0)))	{
+							text->clear();	
+							text2->clear();
+							text3->setText("High Do!");
+							text->setStyleSheet("color: black; background-color: white");
+							text2->setStyleSheet("color: black; background-color: white");
+							text3->setStyleSheet("color: black; background-color: red");
+						}
+			else	if ((peakHertz < pow (2,-0.3/12.0)) && (peakHertz >= pow (2,-1.0/12.0)))	{	
+							text2->clear();
+							text3->clear();
+							text->setText("Low Do!");
+							text2->setStyleSheet("color: black; background-color: white");
+							text3->setStyleSheet("color: black; background-color: white");
+							text->setStyleSheet("color: black; background-color: red");
+						}		
 				// terminal plot 
 				qDebug() << "Do";
 				// assign the second string to textEditString depending on the tone 	
-				textEditString.append("Hz, its a Do");
-				// assing the textEditTring to the text showed on the window    
-				
+			//textEditString.append("Hz, its a Do");
 
 			}
 
@@ -399,83 +436,228 @@ void Window::readMicrophone(){
 				{
 					qDebug() << "Re";
 		            double note = pow (2, 2.0/12.0);
-					if (peakHertz == note)	{textEditString.append("bang on!");}
-					else if (peakHertz > note)	{textEditString.append("high!");}
-					else if (peakHertz < note)	{textEditString.append("low!");}
+					if ((peakHertz >= pow (2,1.7/12.0))&& (peakHertz <= pow (2,2.3/12.0)))	{
+							text->clear();	
+							text3->clear();
+                            text2->setText("Re, Bang On!");
+							text->setStyleSheet("color: black; background-color: white");
+							text3->setStyleSheet("color: black; background-color: white");
+							text2->setStyleSheet("color: black; background-color: green");
+						}
+
+				else	 if (peakHertz > note)	{
+							text->clear();	
+							text2->clear();
+							text3->setText("High Re!");
+							text->setStyleSheet("color: black; background-color: white");
+					    	text2->setStyleSheet("color: black; background-color: white");
+							text3->setStyleSheet("color: black; background-color: red");
+						}
+				else	 if (peakHertz < note)	{	
+							text2->clear();
+							text3->clear();
+							text->setText("Low Re!");
+							text2->setStyleSheet("color: black; background-color: white");
+							text3->setStyleSheet("color: black; background-color: white");
+							text->setStyleSheet("color: black; background-color: red");
+						}
 
 					// assign the second string to textEditString depending on the tone 	
-					textEditString.append("Hz, its a Re");
-					// assing the textEditTring to the text showed on the window    
-					
+				//	textEditString.append("Hz, its a Re");
 				}
 		else if (  (peakHertz >= pow ( 2,3.0/12.0)) && (peakHertz < pow ( 2,4.5/12.0)))
 				{
 					qDebug() << "Mi";
 					double note = pow (2, 3.75/12.0);
-					if (peakHertz == note)	{textEditString.append("bang on!");}
-					else if (peakHertz > note)	{textEditString.append("high!");}
-					else if (peakHertz < note)	{textEditString.append("low!");}
+					if ((peakHertz >= pow (2,3.525/12.0))&& (peakHertz <= pow (2,3.975/12.0)))	{
+						text->clear();	
+						text3->clear();
+						text2->setText("Mi, Bang On!");
+						text->setStyleSheet("color: black; background-color: white");
+						text3->setStyleSheet("color: black; background-color: white");
+						text2->setStyleSheet("color: black; background-color: Green");
+						}
+			else	if (peakHertz > note)	{
+						text->clear();	
+						text2->clear();
+						text3->setText("High Mi!");
+						text->setStyleSheet("color: black; background-color: white");
+						text2->setStyleSheet("color: black; background-color: white");
+                        text3->setStyleSheet("color: black; background-color: red");
+						}
+			else	 if (peakHertz < note)	{
+						text2->clear();
+						text3->clear();
+						text->setText("Low Mi!");
+						text3->setStyleSheet("color: black; background-color: white");
+						text2->setStyleSheet("color: black; background-color: white");
+						text->setStyleSheet("color: black; background-color: red");
+						}
 
 					// assign the second string to textEditString depending on the tone 	
-					textEditString.append("Hz, its a Mi");
-					 
+				//	textEditString.append("Hz, its a Mi");
 					
 				}	
-		else  if (  (peakHertz >= pow ( 2,4.5/12.0)) && (peakHertz < pow ( 2,6.0/12.0)))
+	else	if(  (peakHertz >= pow ( 2,4.5/12.0)) && (peakHertz < pow ( 2,6.0/12.0)))
 				{
 					qDebug() << "Fa";
 					double note = pow (2, 5.25/12.0);
-					if (peakHertz == note)	{textEditString.append("bang on!");}
-					else if (peakHertz > note)	{textEditString.append("high!");}
-					else if (peakHertz < note)	{textEditString.append("low!");}
+					if ((peakHertz >= pow (2, 5.025/12.0))&& (peakHertz <= pow (2,5.475/12.0)))	{
+						text->clear();	
+						text3->clear();
+						text2->setText("Fa, Bang On!");
+						text->setStyleSheet("color: black; background-color: white");
+						text3->setStyleSheet("color: black; background-color: white");
+						text2->setStyleSheet("color: black; background-color: green");
+						}
+			else	if (peakHertz > note)	{
+						text->clear();	
+						text2->clear();
+						text->setStyleSheet("color: black; background-color: white");
+						text2->setStyleSheet("color: black; background-color: white");
+						text3->setStyleSheet("color: black; background-color: red");
+						text3->setText("High Fa!");
+					}
+			else	 if (peakHertz < note)	{	
+						text2->clear();
+						text3->clear();
+						text->setText("Low Fa!");
+						text2->setStyleSheet("color: black; background-color: white");
+						text3->setStyleSheet("color: black; background-color: white");
+						text->setStyleSheet("color: black; background-color: red");
+						
+						}
 					// assign the second string to textEditString depending on the tone 	
-					textEditString.append("Hz, its a Fa");
-				
+				//textEditString.append("Hz, its a Fa");
 					
 				} 
-		else if (  (peakHertz >= pow ( 2,6.0/12.0))  && (peakHertz < pow ( 2, 8.0/12.0)))
+	else	if (  (peakHertz >= pow ( 2,6.0/12.0))  && (peakHertz < pow ( 2, 8.0/12.0)))
 				{
 					qDebug() << "So";
 					double note = pow (2, 7.0/12.0);
-					if (peakHertz == note)	{textEditString.append("bang on!");}
-					else if (peakHertz > note)	{textEditString.append("high!");}
-					else if (peakHertz < note)	{textEditString.append("low!");}
-					// assign the second string to textEditString depending on the tone 	
-					textEditString.append("Hz, its a So");
+					if ((peakHertz >= pow (2,6.7/12.0))&& (peakHertz <= pow (2,7.3/12.0))){
+						text->clear();	
+						text3->clear();
+						text2->setText("So, Bang On!");
+						text->setStyleSheet("color: black; background-color: white");
+						text3->setStyleSheet("color: black; background-color: white");
+						text2->setStyleSheet("color: black; background-color: green");
+						}
+			else if (peakHertz > note)	{
 					
+						text->clear();	
+						text2->clear();
+						text3->setText("High So!");
+						text->setStyleSheet("color: black; background-color: white");
+						text2->setStyleSheet("color: black; background-color: white");
+						text3->setStyleSheet("color: black; background-color: red");
+
+						}
+			else	if (peakHertz < note)	{
+						
+						text2->clear();
+						text3->clear();
+						text->setText("Low So!");
+						text2->setStyleSheet("color: black; background-color: white");
+						text3->setStyleSheet("color: black; background-color: white");
+						text->setStyleSheet("color: black; background-color: red");
+						}
+					// assign the second string to textEditString depending on the tone 	
+				//	textEditString.append("Hz, its a So");
 					
 				}
-		else if (  (peakHertz >= pow ( 2,8.0/12.0)) && (peakHertz < pow ( 2,10.0/12.0)))
+		else if(  (peakHertz >= pow ( 2,8.0/12.0)) && (peakHertz < pow ( 2,10.0/12.0)))
 				{
 					qDebug() << "La";
 					double note = pow (2, 9.0/12.0);
-					if (peakHertz == note)	{textEditString.append("bang on!");}
-					else if (peakHertz > note)	{textEditString.append("high!");}
-					else if (peakHertz < note)	{textEditString.append("low!");}
+					if ((peakHertz >= pow (2,8.7/12.0))&& (peakHertz <= pow (2,9.3/12.0)))	{
+		
+					text->clear();	
+						text->clear();
+						text3->clear();
+						text2->setText("La, Bang On!");
+						text->setStyleSheet("color: black; background-color: white");
+						text3->setStyleSheet("color: black; background-color: white");
+						text2->setStyleSheet("color: black; background-color: green");
+						}
+			else	if (peakHertz > note)	{
+				
+						text->clear();	
+						text2->clear();
+						text->setStyleSheet("color: black; background-color: white");
+						text2->setStyleSheet("color: black; background-color: white");
+						text3->setStyleSheet("color: black; background-color: red");
+						text3->setText("High La!");
+						}
+			else	if (peakHertz < note)	{
+					text->clear();	
+						text2->clear();
+						text3->clear();
+						text->setText("Low La!");
+						text2->setStyleSheet("color: black; background-color: white");
+						text3->setStyleSheet("color: black; background-color: white");
+						text->setStyleSheet("color: black; background-color: red");
+
+						}
 					// assign the second string to textEditString depending on the tone 	
-					textEditString.append("Hz, its a La");
-					 
+					//textEditString.append("Hz, its a La");
 					
 				}
 		else if (  (peakHertz >= pow ( 2,10.0/12.0)) && (peakHertz < pow ( 2,11.5/12.0)))
 				{
 					qDebug() << "Si";
 		    		 double note = pow (2, 10.75/12.0);
-					if (peakHertz == note)	{textEditString.append("bang on!");}
-					else if (peakHertz > note)	{textEditString.append("high!");}
-					else if (peakHertz < note)	{textEditString.append("low!");}
+		     	if ((peakHertz >= pow (2,10.525/12.0))&& (peakHertz <= pow (2,10.975/12.0)))	{
+					//	textEditString.append("bang on!");
+						text->clear();
+						text3->clear();
+						text->setStyleSheet("color: black; background-color: white");
+						text3->setStyleSheet("color: black; background-color: white");
+						text2->setStyleSheet("color: black; background-color: green");
+						text2->setText("Si, Bang On!");
+						}
+
+			else if (peakHertz > note)	{
+					//	textEditString.append("high!");
+					    text->clear();	
+						text2->clear();
+						text->setStyleSheet("color: black; background-color: white");
+						text2->setStyleSheet("color: black; background-color: white");
+						text3->setStyleSheet("color: black; background-color: red");
+						text3->setText("High Si!");
+						}
+			else	if (peakHertz < note)	{
+					//	textEditString.append("low!");	
+						text2->clear();
+						text3->clear();
+						text2->setStyleSheet("color: black; background-color: white");
+						text3->setStyleSheet("color: black; background-color: white");
+						text->setStyleSheet("color: black; background-color: red");
+						text->setText("Low Si!");
+						}
 					// assign the second string to textEditString depending on the tone 	
-					textEditString.append("Hz, its a Si");
-				 
+					//textEditString.append("Hz, its a Si");
+				}
+			}
+		  else 
+ 				{   text->clear();
+				    text3->clear();
+					text2->setStyleSheet("color: black; background-color: white");
+					text3->setStyleSheet("color: black; background-color: white");
+					text->setStyleSheet("color: black; background-color: white");
+                	text2->setText("out of interval");
+				}
+			
 					
-				}	
-   }
+				
    	// assing the textEditTring to the text showed on the window 
-	text->setText(textEditString);
+	//text->setText(textEditString);
 	audiostopbutton->show();	
 	text->show();	
-
+	text2->show();
+	text3->show();
 }
+ 
 void Window::stopRecording()
 {
     audio->stop();
@@ -546,88 +728,88 @@ void Window::TestingSlot()
 		connect(dobutton, SIGNAL(clicked()), this, SLOT(DoPressedSlot()));
 
 	}
-  else if (dist7(rng)==2)
-   { 
-	    // reset player from begining 
-		player = new QMediaPlayer;
-		// Assign the re.mp3 to player 
-	 	player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/re.mp3").absolutePath()));
-		// Set player volume 
-		player->setVolume(90); 
-		// Play the player audio 
-		player->play();	  
-		// Connect dobutton to detect if re is pressed by the user  
-		connect(rebutton, SIGNAL(clicked()), this, SLOT(RePressedSlot()));
+  		else if (dist7(rng)==2)
+  		 { 
+				// reset player from begining 
+				player = new QMediaPlayer;
+				// Assign the re.mp3 to player 
+				player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/re.mp3").absolutePath()));
+				// Set player volume 
+				player->setVolume(90); 
+				// Play the player audio 
+				player->play();	  
+				// Connect dobutton to detect if re is pressed by the user  
+				connect(rebutton, SIGNAL(clicked()), this, SLOT(RePressedSlot()));
 
-	 }
-  else if (dist7(rng)==3)
-   {  
-	    // reset player from begining 
-		player = new QMediaPlayer;
-		// Assign the mi.mp3 to player 
-	 	player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/mi.mp3").absolutePath()));
-		// Set player volume 
-		player->setVolume(90); 
-		// Play the player audio 
-		player->play();	  
-		// Connect dobutton to detect if mi is pressed by the user  
-		connect(mibutton, SIGNAL(clicked()), this, SLOT(MiPressedSlot()));
-	}
-	 
-  else if (dist7(rng)==4)
-   {    
-	    // reset player from begining 
-		player = new QMediaPlayer;
-	 	// Assign the fa.mp3 to player 
-	 	player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/fa.mp3").absolutePath()));
-		// Set player volume 
-		player->setVolume(90); 
-		// Play the player audio 
-		player->play();	  
-		// Connect dobutton to detect if fa is pressed by the user  
-		connect(fabutton, SIGNAL(clicked()), this, SLOT(FaPressedSlot()));
-   }
- else if (dist7(rng)==5)
-   {    
-	    // reset player from begining 
-		player = new QMediaPlayer;
-		// Assign the so.mp3 to player 
-	 	player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/so.mp3").absolutePath()));
-		// Set player volume 
-		player->setVolume(90); 
-		// Play the player audio 
-		player->play();	  
-		// Connect dobutton to detect if so is pressed by the user  
-		connect(sobutton, SIGNAL(clicked()), this, SLOT(SoPressedSlot()));
-	}	 
-else if (dist7(rng)==6)
-   {   
-	    // reset player from begining 
-		player = new QMediaPlayer;
-		// Assign the la.mp3 to player 
-	 	player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/la.mp3").absolutePath()));
-		// Set player volume 
-		player->setVolume(90); 
-		// Play the player audio 
-		player->play();	  
-		// Connect dobutton to detect if la is pressed by the user  
-		connect(labutton, SIGNAL(clicked()), this, SLOT(LaPressedSlot()));
-	 }	 
- else if (dist7(rng)==7)
-   {   
-	    // reset player from begining 
-		player = new QMediaPlayer;
-		// Assign the si.mp3 to player 
-	 	player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/si.mp3").absolutePath()));
-		// Set player volume 
-		player->setVolume(90); 
-		// Play the player audio 
-		player->play();	  
-		// Connect dobutton to detect if si is pressed by the user  
-		connect(sibutton, SIGNAL(clicked()), this, SLOT(SiPressedSlot()));
-	 }	 
+			}
+		else if (dist7(rng)==3)
+		{  
+				// reset player from begining 
+				player = new QMediaPlayer;
+				// Assign the mi.mp3 to player 
+				player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/mi.mp3").absolutePath()));
+				// Set player volume 
+				player->setVolume(90); 
+				// Play the player audio 
+				player->play();	  
+				// Connect dobutton to detect if mi is pressed by the user  
+				connect(mibutton, SIGNAL(clicked()), this, SLOT(MiPressedSlot()));
+			}
+			
+		else if (dist7(rng)==4)
+		{    
+				// reset player from begining 
+				player = new QMediaPlayer;
+				// Assign the fa.mp3 to player 
+				player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/fa.mp3").absolutePath()));
+				// Set player volume 
+				player->setVolume(90); 
+				// Play the player audio 
+				player->play();	  
+				// Connect dobutton to detect if fa is pressed by the user  
+				connect(fabutton, SIGNAL(clicked()), this, SLOT(FaPressedSlot()));
+		}
+		else if (dist7(rng)==5)
+		{    
+				// reset player from begining 
+				player = new QMediaPlayer;
+				// Assign the so.mp3 to player 
+				player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/so.mp3").absolutePath()));
+				// Set player volume 
+				player->setVolume(90); 
+				// Play the player audio 
+				player->play();	  
+				// Connect dobutton to detect if so is pressed by the user  
+				connect(sobutton, SIGNAL(clicked()), this, SLOT(SoPressedSlot()));
+			}	 
+		else if (dist7(rng)==6)
+		{   
+				// reset player from begining 
+				player = new QMediaPlayer;
+				// Assign the la.mp3 to player 
+				player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/la.mp3").absolutePath()));
+				// Set player volume 
+				player->setVolume(90); 
+				// Play the player audio 
+				player->play();	  
+				// Connect dobutton to detect if la is pressed by the user  
+				connect(labutton, SIGNAL(clicked()), this, SLOT(LaPressedSlot()));
+			}	 
+		else if (dist7(rng)==7)
+		{   
+				// reset player from begining 
+				player = new QMediaPlayer;
+				// Assign the si.mp3 to player 
+				player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/si.mp3").absolutePath()));
+				// Set player volume 
+				player->setVolume(90); 
+				// Play the player audio 
+				player->play();	  
+				// Connect dobutton to detect if si is pressed by the user  
+				connect(sibutton, SIGNAL(clicked()), this, SLOT(SiPressedSlot()));
+			}	 
 
-}
+		}
 
                 
 void Window::DoPressedSlot()

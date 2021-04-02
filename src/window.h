@@ -10,7 +10,6 @@
 #include <QDebug>
 #include <algorithm>
 #include <fftw3.h>
-#include <QTextEdit> 
 #include <QLineEdit>
 
 // {a=440.00, b=493.88, c=523.25, d=587.33, e=659.25, f=698.46, g=783.99};
@@ -105,7 +104,8 @@ private:
 	QPushButton *labutton;
 	QPushButton *sibutton;
  	QPushButton *feedbackbutton;
-	QLineEdit *text;
+	QLineEdit *text, *text2, *text3;
+
 	  /*! Different Qt pointers*/
 	QAudioRecorder *audioRecorder;
 	QMediaPlayer *player;
