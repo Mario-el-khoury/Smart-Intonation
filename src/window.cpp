@@ -259,7 +259,14 @@ void Window::exitslot()
 
 /// Audio Record whenever pushbutton2 is pressed///
 	void Window::AudioRecorderSlot()
-{	 
+{	
+	dobutton->show();
+	rebutton->show();
+	mibutton->show();
+	fabutton->show();
+	sobutton->show();
+	labutton->show();
+	tibutton->show(); 
 	pushbutton3->setDisabled(true);
 	pushbutton1->setDisabled(true);
 	pushbutton2->setDisabled(true);
@@ -329,49 +336,100 @@ void Window::readMicrophone(){
 		qDebug() << peakHertz << "Hz";
 	}
 
-	peakIndex = 0;
-	peakmag=0;
-   
-    peakHertz /=  262.0 ;
+	// peakIndex = 0;
+	// peakmag=0;
+    if(110 < peakHertz < 880){
+		peakHertz /=  262.0 ;
 
-	while(peakHertz < 1)
-		peakHertz *= 2;
-
-	while(peakHertz > 2)
-		peakHertz /= 2 ;
-	
+		if(peakHertz < 1){
+			peakHertz *= 2;
+		}
+		if(peakHertz > 2){
+			peakHertz /= 2 ;
+		}
+		
  //  qDebug() << peakHertz;
 
     if (  (peakHertz >= pow (2, -1.0/12.0)) && (peakHertz < pow ( 2,1.0/12.0)))
 		{
 			qDebug() << "Do";
+			dobutton->setStyleSheet("color: black; background-color: green");
+			rebutton->setStyleSheet("color: black; background-color: white");
+			mibutton->setStyleSheet("color: black; background-color: white");
+			fabutton->setStyleSheet("color: black; background-color: white");
+			sobutton->setStyleSheet("color: black; background-color: white");
+			labutton->setStyleSheet("color: black; background-color: white");
+			tibutton->setStyleSheet("color: black; background-color: white");
 		}
 
 	else if (  (peakHertz >= pow ( 2,1.0/12.0)) && (peakHertz < pow ( 2,3.0/12.0) ))
 			{
 				qDebug() << "Re";
+				dobutton->setStyleSheet("color: black; background-color: white");
+	rebutton->setStyleSheet("color: black; background-color: green");
+	mibutton->setStyleSheet("color: black; background-color: white");
+	fabutton->setStyleSheet("color: black; background-color: white");
+	sobutton->setStyleSheet("color: black; background-color: white");
+	labutton->setStyleSheet("color: black; background-color: white");
+	tibutton->setStyleSheet("color: black; background-color: white");
 			}
 	else if (  (peakHertz >= pow ( 2,3.0/12.0)) && (peakHertz < pow ( 2,4.5/12.0)))
 			{
 				qDebug() << "Mi";
+				dobutton->setStyleSheet("color: black; background-color: white");
+	rebutton->setStyleSheet("color: black; background-color: white");
+	mibutton->setStyleSheet("color: black; background-color: green");
+	fabutton->setStyleSheet("color: black; background-color: white");
+	sobutton->setStyleSheet("color: black; background-color: white");
+	labutton->setStyleSheet("color: black; background-color: white");
+	tibutton->setStyleSheet("color: black; background-color: white");
 			}	
 	else  if (  (peakHertz >= pow ( 2,4.5/12.0)) && (peakHertz < pow ( 2,6.0/12.0)))
 			{
 				qDebug() << "Fa";
+				dobutton->setStyleSheet("color: black; background-color: white");
+	rebutton->setStyleSheet("color: black; background-color: white");
+	mibutton->setStyleSheet("color: black; background-color: white");
+	fabutton->setStyleSheet("color: black; background-color: green");
+	sobutton->setStyleSheet("color: black; background-color: white");
+	labutton->setStyleSheet("color: black; background-color: white");
+	tibutton->setStyleSheet("color: black; background-color: white");
 			} 
 	else if (  (peakHertz >= pow ( 2,6.0/12.0))  && (peakHertz < pow ( 2, 8.0/12.0)))
 			{
 				qDebug() << "So";
+				dobutton->setStyleSheet("color: black; background-color: white");
+	rebutton->setStyleSheet("color: black; background-color: white");
+	mibutton->setStyleSheet("color: black; background-color: white");
+	fabutton->setStyleSheet("color: black; background-color: white");
+	sobutton->setStyleSheet("color: black; background-color: green");
+	labutton->setStyleSheet("color: black; background-color: white");
+	tibutton->setStyleSheet("color: black; background-color: white");
 			}
 	else if (  (peakHertz >= pow ( 2,8.0/12.0)) && (peakHertz < pow ( 2,10.0/12.0)))
 			{
 				qDebug() << "La";
+				dobutton->setStyleSheet("color: black; background-color: white");
+	rebutton->setStyleSheet("color: black; background-color: white");
+	mibutton->setStyleSheet("color: black; background-color: white");
+	fabutton->setStyleSheet("color: black; background-color: white");
+	sobutton->setStyleSheet("color: black; background-color: white");
+	labutton->setStyleSheet("color: black; background-color: green");
+	tibutton->setStyleSheet("color: black; background-color: white");
 			}
 	else if (  (peakHertz >= pow ( 2,10.0/12.0)) && (peakHertz < pow ( 2,11.5/12.0)))
 			{
 				qDebug() << "Ti";
+				dobutton->setStyleSheet("color: black; background-color: white");
+	rebutton->setStyleSheet("color: black; background-color: white");
+	mibutton->setStyleSheet("color: black; background-color: white");
+	fabutton->setStyleSheet("color: black; background-color: white");
+	sobutton->setStyleSheet("color: black; background-color: white");
+	labutton->setStyleSheet("color: black; background-color: white");
+	tibutton->setStyleSheet("color: black; background-color: green");
 			}		
-	exitbutton->show();		
+	exitbutton->show();	
+	}	
 }
 
 void Window::stopRecording()
@@ -499,6 +557,13 @@ void Window::DoPressedSlot()
 	player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/do.mp3").absolutePath()));
 	player->setVolume(90); 
 	player->play();
+	dobutton->setStyleSheet("color: black; background-color: green");
+	rebutton->setStyleSheet("color: black; background-color: white");
+	mibutton->setStyleSheet("color: black; background-color: white");
+	fabutton->setStyleSheet("color: black; background-color: white");
+	sobutton->setStyleSheet("color: black; background-color: white");
+	labutton->setStyleSheet("color: black; background-color: white");
+	tibutton->setStyleSheet("color: black; background-color: white");
  }
 
 void Window::RePressedSlot()
@@ -507,6 +572,13 @@ void Window::RePressedSlot()
 	player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/re.mp3").absolutePath()));
 	player->setVolume(90); 
 	player->play();
+	dobutton->setStyleSheet("color: black; background-color: white");
+	rebutton->setStyleSheet("color: black; background-color: green");
+	mibutton->setStyleSheet("color: black; background-color: white");
+	fabutton->setStyleSheet("color: black; background-color: white");
+	sobutton->setStyleSheet("color: black; background-color: white");
+	labutton->setStyleSheet("color: black; background-color: white");
+	tibutton->setStyleSheet("color: black; background-color: white");
  }
  void Window::MiPressedSlot()
  {
@@ -514,6 +586,13 @@ void Window::RePressedSlot()
 	player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/mi.mp3").absolutePath()));
 	player->setVolume(90); 
 	player->play();
+	dobutton->setStyleSheet("color: black; background-color: white");
+	rebutton->setStyleSheet("color: black; background-color: white");
+	mibutton->setStyleSheet("color: black; background-color: green");
+	fabutton->setStyleSheet("color: black; background-color: white");
+	sobutton->setStyleSheet("color: black; background-color: white");
+	labutton->setStyleSheet("color: black; background-color: white");
+	tibutton->setStyleSheet("color: black; background-color: white");
  }
 void Window::FaPressedSlot()
  {
@@ -521,6 +600,13 @@ void Window::FaPressedSlot()
 	player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/fa.mp3").absolutePath()));
 	player->setVolume(90); 
 	player->play();
+	dobutton->setStyleSheet("color: black; background-color: white");
+	rebutton->setStyleSheet("color: black; background-color: white");
+	mibutton->setStyleSheet("color: black; background-color: white");
+	fabutton->setStyleSheet("color: black; background-color: green");
+	sobutton->setStyleSheet("color: black; background-color: white");
+	labutton->setStyleSheet("color: black; background-color: white");
+	tibutton->setStyleSheet("color: black; background-color: white");
  }
 void Window::SoPressedSlot()
  {
@@ -528,6 +614,13 @@ void Window::SoPressedSlot()
 	player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/so.mp3").absolutePath()));
 	player->setVolume(90); 
 	player->play();
+	dobutton->setStyleSheet("color: black; background-color: white");
+	rebutton->setStyleSheet("color: black; background-color: white");
+	mibutton->setStyleSheet("color: black; background-color: white");
+	fabutton->setStyleSheet("color: black; background-color: white");
+	sobutton->setStyleSheet("color: black; background-color: green");
+	labutton->setStyleSheet("color: black; background-color: white");
+	tibutton->setStyleSheet("color: black; background-color: white");
  }
 void Window::LaPressedSlot()
  {
@@ -535,6 +628,13 @@ void Window::LaPressedSlot()
 	player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/la.mp3").absolutePath()));
 	player->setVolume(90); 
 	player->play();
+	dobutton->setStyleSheet("color: black; background-color: white");
+	rebutton->setStyleSheet("color: black; background-color: white");
+	mibutton->setStyleSheet("color: black; background-color: white");
+	fabutton->setStyleSheet("color: black; background-color: white");
+	sobutton->setStyleSheet("color: black; background-color: white");
+	labutton->setStyleSheet("color: black; background-color: green");
+	tibutton->setStyleSheet("color: black; background-color: white");
  }
 void Window::TiPressedSlot()
  {
@@ -542,6 +642,13 @@ void Window::TiPressedSlot()
 	player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/ti.mp3").absolutePath()));
 	player->setVolume(90); 
 	player->play();
+	dobutton->setStyleSheet("color: black; background-color: white");
+	rebutton->setStyleSheet("color: black; background-color: white");
+	mibutton->setStyleSheet("color: black; background-color: white");
+	fabutton->setStyleSheet("color: black; background-color: white");
+	sobutton->setStyleSheet("color: black; background-color: white");
+	labutton->setStyleSheet("color: black; background-color: white");
+	tibutton->setStyleSheet("color: black; background-color: green");
  }
 
 void Window::pianoplayer()
@@ -555,10 +662,10 @@ void Window::pianoplayer()
 	labutton->show();
 	tibutton->show();
 	piano->setDisabled(true);
-	pushbutton1->setDisabled(true);
-	pushbutton2->setDisabled(true);
-	pushbutton3->setDisabled(true);
-	quitbutton->setDisabled(true);
+	pushbutton1->setEnabled(true);
+	pushbutton2->setEnabled(true);
+	pushbutton3->setEnabled(true);
+	quitbutton->setEnabled(true);
 
 	connect(dobutton, SIGNAL(clicked()), this, SLOT(DoPressedSlot()));
 	connect(rebutton, SIGNAL(clicked()), this, SLOT(RePressedSlot()));
