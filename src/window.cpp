@@ -327,13 +327,19 @@ void Window::exitslot()
         qWarning() << "Default format not supported, trying to use the nearest.";
         format = info.nearestFormat(format);
    	 }
+	// initialise new audio	
     audio = new QAudioInput(format, this);
-	audio->setBufferSize(fftbuffsize); // size of imput data
+	// size of imput data
+	audio->setBufferSize(fftbuffsize); 
+	// slot connection between audio and readmicrophone data
 	connect(audio, SIGNAL(notify()),this,SLOT(readMicrophone()));
+	// initialise new array 
 	readmicarray = new QByteArray;
+	//assing the readmicarray to readMic
 	readMic = new QBuffer(readmicarray);
 	readMic->open(QIODevice::ReadWrite|QIODevice::Truncate);
 	audio->start(readMic);
+	// delay to catch samples and detect the pitch 
 	audio->setNotifyInterval(bufferTime);
 	
 	qDebug()<<"frequency resolution" << sampleRate/audio->bufferSize();
@@ -350,6 +356,7 @@ void Window::readMicrophone(){
 	}
 	
 	datain.clear();
+	// execute the fft function to find the frequency 
 	fftw_execute(plan);
 	
 	//find maximum peak in fftouputbuffer
@@ -368,13 +375,13 @@ void Window::readMicrophone(){
 	}
 	
 	bool peakflag= false;
-	QString textEditString("Your voice frequency is ");
+	//QString textEditString("Your voice frequency is ");
 
 	if (peakmag > 15000) {
 		peakHertz = peakIndex * (sampleRate/audio->bufferSize());
 		qDebug() << peakHertz << "Hz";
 		// assign the frequency values to textEditString 
-		textEditString.append(QString("%L0").arg(peakHertz,0,'f',2));
+	  //	textEditString.append(QString("%L0").arg(peakHertz,0,'f',2));
 		peakflag = true;
 	}
 	// convert double peakHertz to string strpeakHertz and put no number after the commas
@@ -388,10 +395,13 @@ void Window::readMicrophone(){
 		// peakHertz /=  261.63 ;	//c major
 		peakHertz /= peakHertzScale;
 		
-
+        // cover large range of frequencies 
 		while(peakHertz < pow (2,-1/12.0))  //0.94
+	    // multiply peakhertz by two to increase and force it to be in the interval 
 			peakHertz *= 2;
+		// cover large range of frequencies 	
 		while(peakHertz > pow (2,11.5/12.0)) //1.94
+		// Divid peakhertz by two to increase and force it to be in the interval 
 			peakHertz /= 2 ;
 
 		if   ((peakHertz >= pow (2,	-1.0/12.0)) && (peakHertz < pow ( 2,1.0/12.0)))
@@ -811,44 +821,49 @@ void Window::TestingSlot()
 
 		}
 
-                
-void Window::DoPressedSlot()
-	{
-		feedbackbutton->setText(tr("Well done!!"));
-	}
-
-void Window::RePressedSlot()
-	{
-		feedbackbutton->setText(tr("Well done!!"));
-	}
- void Window::MiPressedSlot()
-	{
-		feedbackbutton->setText(tr("Well done!!"));
-	}
-void Window::FaPressedSlot()
-	{
-		feedbackbutton->setText(tr("Well done!!"));
-	}
-void Window::SoPressedSlot()
-	{
-		feedbackbutton->setText(tr("Well done!!"));
-	}
-void Window::LaPressedSlot()
-	{
-		feedbackbutton->setText(tr("Well done!!"));
-	}
-void Window::SiPressedSlot()
-	{
+    // Signal when Do is pressed           
+	void Window::DoPressedSlot()
+		{
 			feedbackbutton->setText(tr("Well done!!"));
-	}
+		}
+    // Signal when Re is pressed
+	void Window::RePressedSlot()
+		{
+			feedbackbutton->setText(tr("Well done!!"));
+		}
+	// Signal when Mi is pressed	
+	void Window::MiPressedSlot()
+		{
+			feedbackbutton->setText(tr("Well done!!"));
+		}
+	// Signal when Fa is pressed	
+	void Window::FaPressedSlot()
+		{
+			feedbackbutton->setText(tr("Well done!!"));
+		}
+	// Signal when So is pressed	
+	void Window::SoPressedSlot()
+		{
+			feedbackbutton->setText(tr("Well done!!"));
+		}
+	// Signal when La is pressed	
+	void Window::LaPressedSlot()
+		{
+			feedbackbutton->setText(tr("Well done!!"));
+		}
+	// Signal when Si is pressed
+	void Window::SiPressedSlot()
+		{
+				feedbackbutton->setText(tr("Well done!!"));
+		}
 
- 
-//  Function is used to quit the application 
-void Window::quitApp()    
-	{ 
-   		 Window::close();
-   
-	}
+	
+	//  Function is used to quit the application 
+	void Window::quitApp()    
+		{ 
+			Window::close();
+	
+		}
 
 
 
