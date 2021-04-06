@@ -3,7 +3,7 @@
 #include <qwt/qwt_arrow_button.h>
 #include <qwt/qwt_plot.h>
 #include <qwt/qwt_plot_curve.h>
-#include <qwt/qwt_plot_textlabel.h>                  //Text
+#include <qwt/qwt_plot_textlabel.h>                
 #include <QBoxLayout>
 #include <QtMultimedia>
 #include <QVideoWidget>
@@ -88,29 +88,50 @@ private:
 
     //! Clickable button pointers.
     /*! Pointers to QPushButtons to allow user to press any button on the window  */
-  //** intialisation of different pushbuttons */
+ 	//** intialisation of pushbutton1 */
 	QPushButton *pushbutton1;
+	//** intialisation of pushbutton2 */
 	QPushButton *pushbutton2;
+	//** intialisation of pushbutton3 */
 	QPushButton *pushbutton3;
+	//** intialisation of quitbutton */
     QPushButton *quitbutton;
+	//** intialisation of  stopbutton */
 	QPushButton *stopbutton;
+	//** intialisation of resumebutton */
 	QPushButton *resumebutton;
-	QPushButton *exitbutton, *audiostopbutton;
+	//** intialisation of exitbutton */
+	QPushButton *exitbutton;
+	//** intialisation of audiostopbutton */
+	QPushButton *audiostopbutton;
+	//** intialisation of dobutton */
 	QPushButton *dobutton;
+	//** intialisation of rebutton */
 	QPushButton *rebutton;
+	//** intialisation of mibutton */
 	QPushButton *mibutton;
+	//** intialisation of fabutton */
 	QPushButton *fabutton;
+	//** intialisation of sobutton */
 	QPushButton *sobutton;
+	//** intialisation of labutton */
 	QPushButton *labutton;
+	//** intialisation of sibutton */
 	QPushButton *sibutton;
+	//** intialisation of feedbackbutton */
  	QPushButton *feedbackbutton;
+	 //** intialisation of text , text2, and text 3 */
 	QLineEdit *text, *text2, *text3;
 
-	  /*! Different Qt pointers*/
+	/** Pointer to access recorded audio*/
 	QAudioRecorder *audioRecorder;
+    /** Pointer to an array containing video music*/
 	QMediaPlayer *player;
+    /** Pointer to access the video */
     QVideoWidget* videoWidget;
+	/** Pointer to an array containing audio stuff*/
     QAudioInput* audio; 
+	/** Pointer to change audio format*/
 	QAudioFormat format;
      
 
