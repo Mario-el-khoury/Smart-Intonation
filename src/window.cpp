@@ -389,12 +389,9 @@ void Window::readMicrophone(){
 		peakHertz /= peakHertzScale;
 		
 
-		//while(peakHertz < pow (2,-1/12.0))  //0.94
-		while(peakHertz < 1)
+		while(peakHertz < pow (2,-1/12.0))  //0.94
 			peakHertz *= 2;
-
-		//while(peakHertz > pow (2,11.5/12.0)) //1.94
-		while(peakHertz > 2)
+		while(peakHertz > pow (2,11.5/12.0)) //1.94
 			peakHertz /= 2 ;
 
 		if   ((peakHertz >= pow (2,	-1.0/12.0)) && (peakHertz < pow ( 2,1.0/12.0)))
@@ -417,7 +414,8 @@ void Window::readMicrophone(){
 							text2->setStyleSheet("color: black; background-color: white");
 							text3->setStyleSheet("color: black; background-color: red");
 						}
-			else	if ((peakHertz < pow (2,-0.3/12.0)) && (peakHertz >= pow (2,-1.0/12.0)))	{	
+			else	if ((peakHertz < pow (2,-0.3/12.0)) && (peakHertz > pow (2,-1.0/12.0)))	
+			{	
 							text2->clear();
 							text3->clear();
 							text->setText("Low Do!");
@@ -617,7 +615,8 @@ void Window::readMicrophone(){
 						text2->setText("Si, Bang On!");
 						}
 
-			else if (peakHertz > note)	{
+		//	else if (peakHertz > note)	
+			else if ((peakHertz > pow (2, 10.975/12.0)) &&  (peakHertz < pow ( 2,11.5/12.0))){
 					//	textEditString.append("high!");
 					    text->clear();	
 						text2->clear();
@@ -626,7 +625,8 @@ void Window::readMicrophone(){
 						text3->setStyleSheet("color: black; background-color: red");
 						text3->setText("High Si!");
 						}
-			else	if (peakHertz < note)	{
+			//else	if (peakHertz < note)
+			else	if ((peakHertz < pow (2, 10.525/12.0)) && (peakHertz > pow (2,10/12.0)))		{
 					//	textEditString.append("low!");	
 						text2->clear();
 						text3->clear();
