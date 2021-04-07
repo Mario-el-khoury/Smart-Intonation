@@ -30,49 +30,49 @@ public:
 public slots:
 	
 	/** function to play the c scale video */ 
-		void playslot();           
+		void playSlot();           
 
     /** Function to handle proper shutdown of the window */
 		void quitApp();   
 
     /** function that pause the video */
-		void pauseslot();    
+		void pauseSlot();    
 
 	/** function that resume the video */	 
-		void resumeslot();
+		void resumeSlot();
 
     /** function that starts taking microphone input  */
-		void AudioRecorderSlot();
+		void audioRecorderSlot();
 
     /** function that decode microphone input  */
-		void recognisingSlot();
+		void testingSlot();
 
     /** function that exit(back) the video or any other sub-phase */
-		void exitslot();
+		void exitSlot();
 
 	/** function that stop audio record */	
 		void stopRecording();
 
     /** function that confirm that Do is pressed */
-		void DoPressedSlot();
+		bool DoPressedSlot();
 
 	/** function that confirm that Re is pressed */	
-		void RePressedSlot();
+		bool RePressedSlot();
 
 	/* function that confirm that Mi is pressed */	
-		void MiPressedSlot();
+		bool MiPressedSlot();
 
 	/** function that confirm that Fa is pressed */	
-		void FaPressedSlot();
+		bool FaPressedSlot();
 
 	/** function that confirm that So is pressed */	
-		void SoPressedSlot();
+		bool SoPressedSlot();
 
 	/** function that confirm that La is pressed */	
-		void LaPressedSlot();
+		bool LaPressedSlot();
 	
 	/** function that confirm that Si is pressed */
-		void TiPressedSlot();
+		bool TiPressedSlot();
 
     /** function that handle the state of the microphone */
 		void handleStateChanged(QAudio::State newState);
@@ -80,7 +80,7 @@ public slots:
     /** function that read mic data */
 		void readMicrophone();
 
-		void pianoplayer();
+		void pianoPlayer();
 
 // internal variables for the window class
 private:
@@ -88,9 +88,9 @@ private:
     //! Clickable button pointers.
     /*! Pointers to QPushButtons to allow user to press any button on the window  */
   //** intialisation of different pushbuttons */
-	QPushButton *pushbutton1;
-	QPushButton *pushbutton2;
-	QPushButton *pushbutton3;
+	QPushButton *learningbutton;
+	QPushButton *recognizingbutton;
+	QPushButton *testingbutton;
     QPushButton *quitbutton;
 	QPushButton *stopbutton;
 	QPushButton *resumebutton;
