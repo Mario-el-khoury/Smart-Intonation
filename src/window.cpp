@@ -8,6 +8,7 @@
 #include <random>   // for random numbers
 #include <unistd.h>   // for delays   //usleep(3000000); sleep 3 seconds
 #include <pthread.h>
+#include <QString>
 
 /* open the constructer of the project*/
 
@@ -127,7 +128,12 @@ Window::Window()
 	feedbackbutton->hide();
 	feedbackbutton->setStyleSheet("color: black; background-color: grey");
 
-	
+	notename = new QPushButton;
+	notename->setText(tr("Melody here!"));
+	notename->setFixedHeight(100);
+	notename->setFixedWidth(600);
+	notename->hide();
+	notename->setStyleSheet("color: black; background-color: white");
 
 		//QPushButton *learningbutton = new QPushButton(this);      // to open new window when pressing pushbutton
 		// QWidget *widget = new QWidget(this);
@@ -151,7 +157,8 @@ Window::Window()
 	connect(resumebutton, SIGNAL(clicked()), this, SLOT(resumeSlot())); //connect resumebutton to resumeSlot 
 	connect(exitbutton, SIGNAL(clicked()), this, SLOT(exitSlot())); //connect exitbutton to exitSlot
 	connect(piano,SIGNAL(clicked()), this, SLOT(pianoPlayer()));
-
+	//connect(notename,SIGNAL(clicked()), this, SLOT(clear()));
+	
 	// learningbutton->show();
 	// recognizingbutton->show();
 	// testingbutton->show();
@@ -162,6 +169,7 @@ Window::Window()
     
 	// set up the layout - learningbutton above recognizingbutton and so on
 	vLayout = new QVBoxLayout;
+	vLayout->addWidget(notename);
 	vLayout->addWidget(learningbutton); 
 	vLayout->addWidget(recognizingbutton);
 	vLayout->addWidget(testingbutton);
@@ -236,7 +244,7 @@ void Window::resumeSlot()
 
 void Window::exitSlot()
 {   
-	//audio->stop();	
+	//stopRecording();	
 	exitbutton->hide();
     videoWidget->hide();
 	player->stop();  
@@ -270,6 +278,7 @@ void Window::exitSlot()
 	sobutton->show();
 	labutton->show();
 	tibutton->show(); 
+	notename->show();
 	testingbutton->setDisabled(true);
 	learningbutton->setDisabled(true);
 	piano->setDisabled(true);
@@ -302,12 +311,11 @@ void Window::exitSlot()
 	audio->setNotifyInterval(bufferTime);
 	audio->start(readMic);
 
-	qDebug()<<"frequency resolution" << sampleRate/audio->bufferSize();
-   
+	qDebug()<<"frequency resolution"<< sampleRate/audio->bufferSize();
 }
 
 void Window::readMicrophone(){
-
+	QString str;
 	QByteArray datain = readMic->data();
 	readMic->buffer().clear();
 	readMic->reset();
@@ -333,15 +341,12 @@ void Window::readMicrophone(){
 		}
 		
 	}
-	
-	if (peakmag > 10000) {
+
+    if(110 < peakHertz < 880){
+		if (peakmag > 1000000) {
 		peakHertz = peakIndex * (sampleRate/audio->bufferSize());
 		qDebug() << peakHertz << "Hz";
-	}
-
-	// peakIndex = 0;
-	// peakmag=0;
-    if(110 < peakHertz < 880){
+		}
 		peakHertz /=  262.0 ;
 
 		if(peakHertz < 1){
@@ -349,15 +354,18 @@ void Window::readMicrophone(){
 		}
 		if(peakHertz > 2){
 			peakHertz /= 2 ;
-		}
+	}
 		
 		
 		
  //  qDebug() << peakHertz;
-
+	
     if (  (peakHertz >= pow (2, -1.0/12.0)) && (peakHertz < pow ( 2,1.0/12.0)))
 		{
 			qDebug() << "Do";
+			//str.prepend(str);
+			str.append("1 "); 
+			notename->setText(str);
 			dobutton->setStyleSheet("color: black; background-color: darkseagreen");
 			rebutton->setStyleSheet("color: black; background-color: ivory");
 			mibutton->setStyleSheet("color: black; background-color: ivory");
@@ -370,6 +378,9 @@ void Window::readMicrophone(){
 	else if (  (peakHertz >= pow ( 2,1.0/12.0)) && (peakHertz < pow ( 2,3.0/12.0) ))
 			{
 				qDebug() << "Re";
+				//str.prepend(str);
+				str.append("2 "); 
+				notename->setText(str);
 				dobutton->setStyleSheet("color: black; background-color: ivory");
 				rebutton->setStyleSheet("color: black; background-color: darkseagreen");
 				mibutton->setStyleSheet("color: black; background-color: ivory");
@@ -381,6 +392,9 @@ void Window::readMicrophone(){
 	else if (  (peakHertz >= pow ( 2,3.0/12.0)) && (peakHertz < pow ( 2,4.5/12.0)))
 			{
 				qDebug() << "Mi";
+				//str.prepend(str);
+				str.append("3 ");
+				notename->setText(str); 
 				dobutton->setStyleSheet("color: black; background-color: ivory");
 				rebutton->setStyleSheet("color: black; background-color: ivory");
 				mibutton->setStyleSheet("color: black; background-color: darkseagreen");
@@ -392,6 +406,9 @@ void Window::readMicrophone(){
 	else  if (  (peakHertz >= pow ( 2,4.5/12.0)) && (peakHertz < pow ( 2,6.0/12.0)))
 			{
 				qDebug() << "Fa";
+				//str.prepend(str);
+				str.append("4 "); 
+				notename->setText(str);
 				dobutton->setStyleSheet("color: black; background-color: ivory");
 				rebutton->setStyleSheet("color: black; background-color: ivory");
 				mibutton->setStyleSheet("color: black; background-color: ivory");
@@ -403,6 +420,9 @@ void Window::readMicrophone(){
 	else if (  (peakHertz >= pow ( 2,6.0/12.0))  && (peakHertz < pow ( 2, 8.0/12.0)))
 			{
 				qDebug() << "So";
+				//str.prepend(str);
+				QString note = str.append("5 "); 
+				notename->setText(str);
 				dobutton->setStyleSheet("color: black; background-color: ivory");
 				rebutton->setStyleSheet("color: black; background-color: ivory");
 				mibutton->setStyleSheet("color: black; background-color: ivory");
@@ -414,6 +434,9 @@ void Window::readMicrophone(){
 	else if (  (peakHertz >= pow ( 2,8.0/12.0)) && (peakHertz < pow ( 2,10.0/12.0)))
 			{
 				qDebug() << "La";
+				//str.prepend(str);
+				QString note = str.append("6 ");
+				notename->setText(str); 
 				dobutton->setStyleSheet("color: black; background-color: ivory");
 				rebutton->setStyleSheet("color: black; background-color: ivory");
 				mibutton->setStyleSheet("color: black; background-color: ivory");
@@ -425,6 +448,9 @@ void Window::readMicrophone(){
 	else if (  (peakHertz >= pow ( 2,10.0/12.0)) && (peakHertz < pow ( 2,11.5/12.0)))
 			{
 				qDebug() << "Ti";
+				//str.prepend(str);
+				QString note = str.append("7 ");
+				notename->setText(str);
 				dobutton->setStyleSheet("color: black; background-color: ivory");
 				rebutton->setStyleSheet("color: black; background-color: ivory");
 				mibutton->setStyleSheet("color: black; background-color: ivory");

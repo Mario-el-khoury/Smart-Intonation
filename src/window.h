@@ -104,6 +104,7 @@ private:
 	QPushButton *tibutton;
 	QPushButton *feedbackbutton;
 	QPushButton *piano;
+	QPushButton *notename;
   
   /*! Different Qt pointers*/
 	QAudioRecorder *audioRecorder;
@@ -116,6 +117,8 @@ private:
 	// layout elements from Qt itself http://qt-project.org/doc/qt-4.8/classes.html
 	QVBoxLayout  *vLayout;  // vertical layout
 	QHBoxLayout  *hLayout;  // horizontal layout
+
+	
 
     /** pointer to access fftinputbuffer */
 	double* fftinputbuffer;
