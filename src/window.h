@@ -81,6 +81,7 @@ public slots:
 		void readMicrophone();
 
 		void pianoPlayer();
+		void clearnotes();
 
 // internal variables for the window class
 private:
@@ -104,7 +105,8 @@ private:
 	QPushButton *tibutton;
 	QPushButton *feedbackbutton;
 	QPushButton *piano;
-	QPushButton *notename;
+	QPushButton *melody;
+	QPushButton *stoprecording;
   
   /*! Different Qt pointers*/
 	QAudioRecorder *audioRecorder;

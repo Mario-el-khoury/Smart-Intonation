@@ -128,12 +128,21 @@ Window::Window()
 	feedbackbutton->hide();
 	feedbackbutton->setStyleSheet("color: black; background-color: grey");
 
-	notename = new QPushButton;
-	notename->setText(tr("Melody here!"));
-	notename->setFixedHeight(100);
-	notename->setFixedWidth(1000);
-	notename->hide();
-	notename->setStyleSheet("color: black; background-color: white");
+	melody = new QPushButton;
+	melody->setText(tr("Melody here!"));
+	melody->setFixedHeight(100);
+	melody->setFixedWidth(1000);
+	melody->hide();
+	melody->setStyleSheet("color: black; background-color: white");
+
+	stoprecording = new QPushButton;
+	stoprecording->setText(tr("Stop"));
+	stoprecording->setFixedHeight(30);
+	stoprecording->setFixedWidth(100);
+	stoprecording->hide();
+	stoprecording->setStyleSheet("color: black; background-color: lightcoral");
+
+
 
 		//QPushButton *learningbutton = new QPushButton(this);      // to open new window when pressing pushbutton
 		// QWidget *widget = new QWidget(this);
@@ -157,7 +166,8 @@ Window::Window()
 	connect(resumebutton, SIGNAL(clicked()), this, SLOT(resumeSlot())); //connect resumebutton to resumeSlot 
 	connect(exitbutton, SIGNAL(clicked()), this, SLOT(exitSlot())); //connect exitbutton to exitSlot
 	connect(piano,SIGNAL(clicked()), this, SLOT(pianoPlayer()));
-	//connect(notename,SIGNAL(clicked()), this, SLOT(clear()));
+	connect(stoprecording, SIGNAL(clicked()),this, SLOT(stopRecording()));
+	connect(melody,SIGNAL(clicked()), this, SLOT(clearnotes()));
 	
 	// learningbutton->show();
 	// recognizingbutton->show();
@@ -169,7 +179,7 @@ Window::Window()
     
 	// set up the layout - learningbutton above recognizingbutton and so on
 	vLayout = new QVBoxLayout;
-	vLayout->addWidget(notename);
+	vLayout->addWidget(melody);
 	vLayout->addWidget(learningbutton); 
 	vLayout->addWidget(recognizingbutton);
 	vLayout->addWidget(testingbutton);
@@ -191,6 +201,7 @@ Window::Window()
     hLayout->addWidget(feedbackbutton);
 	hLayout->addWidget(exitbutton);
 	hLayout->addWidget(videoWidget);  
+	hLayout->addWidget(stoprecording);
 	videoWidget->hide();
 	setLayout(hLayout);
 
@@ -243,8 +254,7 @@ void Window::resumeSlot()
 }
 
 void Window::exitSlot()
-{   
-	//stopRecording();	
+{   	
 	exitbutton->hide();
     videoWidget->hide();
 	player->stop();  
@@ -259,6 +269,7 @@ void Window::exitSlot()
 	labutton->hide();
 	tibutton->hide();
 	feedbackbutton->hide();
+	stoprecording->hide();
     recognizingbutton->setEnabled(true);
 	testingbutton->setEnabled(true);
 	piano->setEnabled(true);
@@ -278,12 +289,12 @@ void Window::exitSlot()
 	sobutton->show();
 	labutton->show();
 	tibutton->show(); 
-	notename->show();
-	exitbutton->show();
+	melody->show();
+	stoprecording->show();
 	testingbutton->setDisabled(true);
 	learningbutton->setDisabled(true);
 	piano->setDisabled(true);
-	
+
 	QAudioFormat format;
     // Set up the desired format, for example:
     format.setSampleRate(sampleRate); //how fast you take the data 44.1khz
@@ -343,24 +354,24 @@ void Window::readMicrophone(){
 		
 	}
 
-	if (peakmag > 10000) {
-	peakHertz = peakIndex * (sampleRate/audio->bufferSize());
-	peakHertz /=  262.0;
+	if (peakmag > 1000000) {
+		peakHertz = peakIndex * (sampleRate/audio->bufferSize());
+		qDebug() << peakHertz << "HZ";
+		peakHertz /=  262.0;
 
-	while(peakHertz < 1){
-		peakHertz *= 2;
-	}
-	while(peakHertz >= 2){ 
-		peakHertz /= 2;
-	}
-	qDebug() << peakHertz;
+		while(peakHertz < 1){
+			peakHertz *= 2;
+		}
+		while(peakHertz >= 2){ 
+			peakHertz /= 2;
+		}
 	}	
 	
     if (  (peakHertz >= pow (2, -1.0/12.0)) && (peakHertz < pow ( 2,1.0/12.0)))
 		{
 			qDebug() << "Do";
 			str.append("1 "); 
-			notename->setText(str);
+			melody->setText(str);
 			dobutton->setStyleSheet("color: black; background-color: darkseagreen");
 			rebutton->setStyleSheet("color: black; background-color: ivory");
 			mibutton->setStyleSheet("color: black; background-color: ivory");
@@ -374,7 +385,7 @@ void Window::readMicrophone(){
 			{
 				qDebug() << "Re";
 				str.append("2 "); 
-				notename->setText(str);
+				melody->setText(str);
 				dobutton->setStyleSheet("color: black; background-color: ivory");
 				rebutton->setStyleSheet("color: black; background-color: darkseagreen");
 				mibutton->setStyleSheet("color: black; background-color: ivory");
@@ -387,7 +398,7 @@ void Window::readMicrophone(){
 			{
 				qDebug() << "Mi";
 				str.append("3 ");
-				notename->setText(str); 
+				melody->setText(str); 
 				dobutton->setStyleSheet("color: black; background-color: ivory");
 				rebutton->setStyleSheet("color: black; background-color: ivory");
 				mibutton->setStyleSheet("color: black; background-color: darkseagreen");
@@ -400,7 +411,7 @@ void Window::readMicrophone(){
 			{
 				qDebug() << "Fa";
 				str.append("4 "); 
-				notename->setText(str);
+				melody->setText(str);
 				dobutton->setStyleSheet("color: black; background-color: ivory");
 				rebutton->setStyleSheet("color: black; background-color: ivory");
 				mibutton->setStyleSheet("color: black; background-color: ivory");
@@ -413,7 +424,7 @@ void Window::readMicrophone(){
 			{
 				qDebug() << "So";
 				QString note = str.append("5 "); 
-				notename->setText(str);
+				melody->setText(str);
 				dobutton->setStyleSheet("color: black; background-color: ivory");
 				rebutton->setStyleSheet("color: black; background-color: ivory");
 				mibutton->setStyleSheet("color: black; background-color: ivory");
@@ -426,7 +437,7 @@ void Window::readMicrophone(){
 			{
 				qDebug() << "La";
 				QString note = str.append("6 ");
-				notename->setText(str); 
+				melody->setText(str); 
 				dobutton->setStyleSheet("color: black; background-color: ivory");
 				rebutton->setStyleSheet("color: black; background-color: ivory");
 				mibutton->setStyleSheet("color: black; background-color: ivory");
@@ -439,7 +450,7 @@ void Window::readMicrophone(){
 			{
 				qDebug() << "Ti";
 				QString note = str.append("7 ");
-				notename->setText(str);
+				melody->setText(str);
 				dobutton->setStyleSheet("color: black; background-color: ivory");
 				rebutton->setStyleSheet("color: black; background-color: ivory");
 				mibutton->setStyleSheet("color: black; background-color: ivory");
@@ -454,6 +465,7 @@ void Window::stopRecording()
 {
     audio->stop();
     delete audio;
+	exitSlot();
 }
 void Window::handleStateChanged(QAudio::State newState)
 {
@@ -703,6 +715,12 @@ void Window::pianoPlayer()
 	connect(sobutton, SIGNAL(clicked()), this, SLOT(SoPressedSlot()));
 	connect(labutton, SIGNAL(clicked()), this, SLOT(LaPressedSlot()));
 	connect(tibutton, SIGNAL(clicked()), this, SLOT(TiPressedSlot()));
+}
+
+void Window::clearnotes()
+{
+	melody->hide();
+	melody->setText(tr("Melody here!"));
 }
 
 //this function is used to quit the application
