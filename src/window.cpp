@@ -7,6 +7,8 @@
 #include <iostream>
 #include <random>   // for random numbers
 #include <unistd.h>   // for delays   
+#include <cstdlib>
+#include <ctime>
 
 // open the constructer of the project
 
@@ -428,8 +430,6 @@ void Window::readMicrophone(){
 						}		
 				// terminal plot 
 				qDebug() << "Do";
-				// assign the second string to textEditString depending on the tone 	
-			//textEditString.append("Hz, its a Do");
 
 			}
 
@@ -462,9 +462,6 @@ void Window::readMicrophone(){
 							text3->setStyleSheet("color: black; background-color: white");
 							text->setStyleSheet("color: black; background-color: red");
 						}
-
-					// assign the second string to textEditString depending on the tone 	
-				//	textEditString.append("Hz, its a Re");
 				}
 		else if (  (peakHertz >= pow ( 2,3.0/12.0)) && (peakHertz < pow ( 2,4.5/12.0)))
 				{
@@ -493,11 +490,7 @@ void Window::readMicrophone(){
 						text3->setStyleSheet("color: black; background-color: white");
 						text2->setStyleSheet("color: black; background-color: white");
 						text->setStyleSheet("color: black; background-color: red");
-						}
-
-					// assign the second string to textEditString depending on the tone 	
-				//	textEditString.append("Hz, its a Mi");
-					
+						}	
 				}	
 		else	if(  (peakHertz >= pow ( 2,4.5/12.0)) && (peakHertz < pow ( 2,6.0/12.0)))
 				{
@@ -528,9 +521,6 @@ void Window::readMicrophone(){
 						text->setStyleSheet("color: black; background-color: red");
 						
 						}
-					// assign the second string to textEditString depending on the tone 	
-				//textEditString.append("Hz, its a Fa");
-					
 				} 
 		else	if (  (peakHertz >= pow ( 2,6.0/12.0))  && (peakHertz < pow ( 2, 8.0/12.0)))
 				{
@@ -562,10 +552,7 @@ void Window::readMicrophone(){
 						text2->setStyleSheet("color: black; background-color: white");
 						text3->setStyleSheet("color: black; background-color: white");
 						text->setStyleSheet("color: black; background-color: red");
-						}
-					// assign the second string to textEditString depending on the tone 	
-				//	textEditString.append("Hz, its a So");
-					
+						}	
 				}
 		else if(  (peakHertz >= pow ( 2,8.0/12.0)) && (peakHertz < pow ( 2,10.0/12.0)))
 				{
@@ -599,10 +586,7 @@ void Window::readMicrophone(){
 						text3->setStyleSheet("color: black; background-color: white");
 						text->setStyleSheet("color: black; background-color: red");
 
-						}
-					// assign the second string to textEditString depending on the tone 	
-					//textEditString.append("Hz, its a La");
-					
+						}				
 				}
 		else if (  (peakHertz >= pow ( 2,10.0/12.0)) && (peakHertz < pow ( 2,11.5/12.0)))
 				{
@@ -617,7 +601,6 @@ void Window::readMicrophone(){
 						text2->setText("Si, Bang On!");
 						}
 			else if ((peakHertz > pow (2, 10.975/12.0)) &&  (peakHertz < pow ( 2,11.5/12.0))){
-					//	textEditString.append("high!");
 					    text->clear();	
 						text2->clear();
 						text->setStyleSheet("color: black; background-color: white");
@@ -626,7 +609,6 @@ void Window::readMicrophone(){
 						text3->setText("High Si!");
 						}
 			else	if ((peakHertz < pow (2, 10.525/12.0)) && (peakHertz > pow (2,10/12.0)))		{
-					//	textEditString.append("low!");	
 						text2->clear();
 						text3->clear();
 						text2->setStyleSheet("color: black; background-color: white");
@@ -634,8 +616,6 @@ void Window::readMicrophone(){
 						text->setStyleSheet("color: black; background-color: red");
 						text->setText("Low Si!");
 						}
-					// assign the second string to textEditString depending on the tone 	
-					//textEditString.append("Hz, its a Si");
 				}
 			}
 		else 
@@ -646,11 +626,6 @@ void Window::readMicrophone(){
 					text->setStyleSheet("color: black; background-color: white");
                 	text2->setText("Out of Interval");
 				}
-			
-					
-				
-   	// assing the textEditTring to the text showed on the window 
-	//text->setText(textEditString);
 	audiostopbutton->show();	
 	text->show();	
 	text2->show();
@@ -707,13 +682,19 @@ void Window::TestingSlot()
 	sibutton->show();
    	feedbackbutton->setText(tr("feedback"));
 	feedbackbutton->show();
-	std::random_device dev;
-    std::mt19937 rng(dev());
-    std::uniform_int_distribution<std::mt19937::result_type> dist7(1,7); // distribution in range [1, 6]
+	//std::random_device dev;
+    //std::mt19937 rng(dev());
+  //  std::uniform_int_distribution<std::mt19937::result_type> dist7(1,7); // distribution in range [1, 6]
+    
+
+    srand((unsigned) time(0));
+    int randomNumber;
+    for (int index = 0; index < 1; index++) {
+    randomNumber = (rand() % 7) + 1;
+    qDebug() << randomNumber;
+	}
    
-  
-   
-   if (dist7(rng)==1)
+   if (randomNumber==1)
 	{   
 		// reset player from begining 
 		player = new QMediaPlayer;
@@ -727,7 +708,7 @@ void Window::TestingSlot()
 		connect(dobutton, SIGNAL(clicked()), this, SLOT(DoPressedSlot()));
 
 	}
-  		else if (dist7(rng)==2)
+  		else if (randomNumber==2)
   		 { 
 				// reset player from begining 
 				player = new QMediaPlayer;
@@ -741,7 +722,7 @@ void Window::TestingSlot()
 				connect(rebutton, SIGNAL(clicked()), this, SLOT(RePressedSlot()));
 
 			}
-		else if (dist7(rng)==3)
+		else if (randomNumber==3)
 		{  
 				// reset player from begining 
 				player = new QMediaPlayer;
@@ -755,7 +736,7 @@ void Window::TestingSlot()
 				connect(mibutton, SIGNAL(clicked()), this, SLOT(MiPressedSlot()));
 			}
 			
-		else if (dist7(rng)==4)
+		else if (randomNumber==4)
 		{    
 				// reset player from begining 
 				player = new QMediaPlayer;
@@ -768,7 +749,7 @@ void Window::TestingSlot()
 				// Connect dobutton to detect if fa is pressed by the user  
 				connect(fabutton, SIGNAL(clicked()), this, SLOT(FaPressedSlot()));
 		}
-		else if (dist7(rng)==5)
+		else if (randomNumber==5)
 		{    
 				// reset player from begining 
 				player = new QMediaPlayer;
@@ -781,7 +762,7 @@ void Window::TestingSlot()
 				// Connect dobutton to detect if so is pressed by the user  
 				connect(sobutton, SIGNAL(clicked()), this, SLOT(SoPressedSlot()));
 			}	 
-		else if (dist7(rng)==6)
+		else if (randomNumber==6)
 		{   
 				// reset player from begining 
 				player = new QMediaPlayer;
@@ -794,7 +775,7 @@ void Window::TestingSlot()
 				// Connect dobutton to detect if la is pressed by the user  
 				connect(labutton, SIGNAL(clicked()), this, SLOT(LaPressedSlot()));
 			}	 
-		else if (dist7(rng)==7)
+		else if (randomNumber==7)
 		{   
 				// reset player from begining 
 				player = new QMediaPlayer;
