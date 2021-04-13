@@ -163,9 +163,12 @@ private:
 
 	/** variable to store peakHeartz values */
 	double peakHertz;
-
+    /** variable to intialise peakHeartzScale and define which scale the user is using */
 	double peakHertzScale =523.25;
-
+	/** Intialise the lowest frequency detected by the software */
+    double lowestFrequency = 100 ;
+	/** Intialise the highest frequency detected by the software */
+	double highestFrequency = 1000;
     /** pointer to access readmicarray values */
 	QByteArray* readmicarray;
 
