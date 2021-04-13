@@ -130,21 +130,21 @@ Window::Window()
     text= new QLineEdit();
 	text->setReadOnly(true);
 	text->setFixedHeight(30);
-	text->setFixedWidth(100);
+	text->setFixedWidth(120);
 	text->hide();
     //text->setStyleSheet("color: black; background-color: red");
 
     text2= new QLineEdit();
 	text2->setReadOnly(true);
 	text2->setFixedHeight(30);
-	text2->setFixedWidth(100);
+	text2->setFixedWidth(120);
 	text2->hide();
     //text2->setStyleSheet("color: black; background-color: red");
 
 	text3= new QLineEdit();
 	text3->setReadOnly(true);
 	text3->setFixedHeight(30);
-	text3->setFixedWidth(100);
+	text3->setFixedWidth(120);
 	text3->hide();
     //text3->setStyleSheet("color: black; background-color: red");
 	//QPushButton *pushbutton1 = new QPushButton(this);      // to open new window when pressing pushbutton
@@ -362,11 +362,10 @@ void Window::readMicrophone(){
 	//find maximum peak in fftouputbuffer
 	int peakIndex = 0;
 	double peakmag =0;
-    // find the magnitude of the signal 
-	for (int i =1;i<(audio->bufferSize()/2)+1;i++){
+    // find the magnitude of the signal between two intervals
+	for (int i =(int)((lowestFrequency *audio->bufferSize())/sampleRate); i<(int)((highestFrequency*audio->bufferSize())/sampleRate); i++) {						
 		double mag = sqrt(fftoutputbuffer[i][0]*fftoutputbuffer[i][0] +
-							fftoutputbuffer[i][1]*fftoutputbuffer[i][1]); //get magnitude
-
+		fftoutputbuffer[i][1]*fftoutputbuffer[i][1]); 
 		if(mag > peakmag){
 			peakmag = mag;
 			peakIndex=i;
@@ -375,38 +374,32 @@ void Window::readMicrophone(){
 	}
 	
 	bool peakflag= false;
-	//QString textEditString("Your voice frequency is ");
 
-	if (peakmag > 15000) {
+	if (peakmag > 40000) {
 		peakHertz = peakIndex * (sampleRate/audio->bufferSize());
 		qDebug() << peakHertz << "Hz";
-		// assign the frequency values to textEditString 
-	  //	textEditString.append(QString("%L0").arg(peakHertz,0,'f',2));
 		peakflag = true;
 	}
-	// convert double peakHertz to string strpeakHertz and put no number after the commas
-  	// QString  strpeakHertz = QString::number(peakHertz, 'f', 0 );
 	peakIndex = 0;
 	peakmag=0;
 
    	if (peakflag)
    		{
 
-		// peakHertz /=  261.63 ;	//c major
-		peakHertz /= peakHertzScale;
-		
+		// peakHertz /=  523.25 ;	//c major
+		peakHertz /= peakHertzScale;		
         // cover large range of frequencies 
 		while(peakHertz < pow (2,-1/12.0))  //0.94
-	    // multiply peakhertz by two to increase and force it to be in the interval 
+	    // multiply peakhertz by two to increase it and force it to be in the interval 
 			peakHertz *= 2;
 		// cover large range of frequencies 	
 		while(peakHertz > pow (2,11.5/12.0)) //1.94
-		// Divid peakhertz by two to increase and force it to be in the interval 
+		// Divid peakhertz by two to deacrease it and force it to be in the interval 
 			peakHertz /= 2 ;
 
 		if   ((peakHertz >= pow (2,	-1.0/12.0)) && (peakHertz < pow ( 2,1.0/12.0)))
 			{   
-				double note = pow (2, 0.0/12.0);
+				//double note = pow (2, 0.0/12.0);
 				 
  			if ((peakHertz <= pow (2, 0.3/12.0))&& (peakHertz >= pow (2,-0.3/12.0)))	{
 						text->clear();	
@@ -506,7 +499,7 @@ void Window::readMicrophone(){
 				//	textEditString.append("Hz, its a Mi");
 					
 				}	
-	else	if(  (peakHertz >= pow ( 2,4.5/12.0)) && (peakHertz < pow ( 2,6.0/12.0)))
+		else	if(  (peakHertz >= pow ( 2,4.5/12.0)) && (peakHertz < pow ( 2,6.0/12.0)))
 				{
 					qDebug() << "Fa";
 					double note = pow (2, 5.25/12.0);
@@ -539,7 +532,7 @@ void Window::readMicrophone(){
 				//textEditString.append("Hz, its a Fa");
 					
 				} 
-	else	if (  (peakHertz >= pow ( 2,6.0/12.0))  && (peakHertz < pow ( 2, 8.0/12.0)))
+		else	if (  (peakHertz >= pow ( 2,6.0/12.0))  && (peakHertz < pow ( 2, 8.0/12.0)))
 				{
 					qDebug() << "So";
 					double note = pow (2, 7.0/12.0);
@@ -616,7 +609,6 @@ void Window::readMicrophone(){
 					qDebug() << "Si";
 		    		 double note = pow (2, 10.75/12.0);
 		     	if ((peakHertz >= pow (2,10.525/12.0))&& (peakHertz <= pow (2,10.975/12.0)))	{
-					//	textEditString.append("bang on!");
 						text->clear();
 						text3->clear();
 						text->setStyleSheet("color: black; background-color: white");
@@ -624,8 +616,6 @@ void Window::readMicrophone(){
 						text2->setStyleSheet("color: black; background-color: green");
 						text2->setText("Si, Bang On!");
 						}
-
-		//	else if (peakHertz > note)	
 			else if ((peakHertz > pow (2, 10.975/12.0)) &&  (peakHertz < pow ( 2,11.5/12.0))){
 					//	textEditString.append("high!");
 					    text->clear();	
@@ -635,7 +625,6 @@ void Window::readMicrophone(){
 						text3->setStyleSheet("color: black; background-color: red");
 						text3->setText("High Si!");
 						}
-			//else	if (peakHertz < note)
 			else	if ((peakHertz < pow (2, 10.525/12.0)) && (peakHertz > pow (2,10/12.0)))		{
 					//	textEditString.append("low!");	
 						text2->clear();
@@ -649,13 +638,13 @@ void Window::readMicrophone(){
 					//textEditString.append("Hz, its a Si");
 				}
 			}
-		  else 
+		else 
  				{   text->clear();
 				    text3->clear();
 					text2->setStyleSheet("color: black; background-color: white");
 					text3->setStyleSheet("color: black; background-color: white");
 					text->setStyleSheet("color: black; background-color: white");
-                	text2->setText("out of interval");
+                	text2->setText("Out of Interval");
 				}
 			
 					
