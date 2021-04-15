@@ -114,12 +114,12 @@ Window::Window()
 	labutton->hide();
 	labutton->setStyleSheet("color: black; background-color: grey");
 
-	sibutton = new QPushButton;
-	sibutton->setText(tr("Si"));
-	sibutton->setFixedHeight(300);
-	sibutton->setFixedWidth(50);
-	sibutton->hide();
-	sibutton->setStyleSheet("color: black; background-color: Blue");
+	tibutton = new QPushButton;
+	tibutton->setText(tr("Si"));
+	tibutton->setFixedHeight(300);
+	tibutton->setFixedWidth(50);
+	tibutton->hide();
+	tibutton->setStyleSheet("color: black; background-color: Blue");
 
     feedbackbutton = new QPushButton;
 	feedbackbutton->setText(tr("feedback"));
@@ -208,7 +208,7 @@ Window::Window()
 	hLayout->addWidget(fabutton);
 	hLayout->addWidget(sobutton);
 	hLayout->addWidget(labutton);
-	hLayout->addWidget(sibutton);
+	hLayout->addWidget(tibutton);
     hLayout->addWidget(feedbackbutton);
 	hLayout->addWidget(exitbutton);
 	hLayout->addWidget(audiostopbutton);
@@ -240,7 +240,6 @@ Window::~Window() {
 	fftw_cleanup();
 }
 
-//this function works whenever pushbutton 1 is pressed
 void Window::playslot()    
 {    
 	exitbutton->show();
@@ -257,7 +256,7 @@ void Window::playslot()
 	pushbutton3->setDisabled(true);
 	resumebutton->setDisabled(true);
 } 
-//this function is used to pause the learning video
+
 void Window::pauseslot()  
 { 
     player->pause();             //pause the song then enable the user to press any button 
@@ -297,7 +296,7 @@ void Window::exitslot()
 	fabutton->hide();
 	sobutton->hide();
 	labutton->hide();
-	sibutton->hide();
+	tibutton->hide();
 	feedbackbutton->hide();
     pushbutton2->setEnabled(true);
 	pushbutton3->setEnabled(true);
@@ -663,7 +662,7 @@ void Window::handleStateChanged(QAudio::State newState)
     }
 }
 
-//this function works whenever pushbutton3 is pressed
+//
 
 void Window::TestingSlot()    
 { 
@@ -679,7 +678,7 @@ void Window::TestingSlot()
 	fabutton->show();
 	sobutton->show();
 	labutton->show();
-	sibutton->show();
+	tibutton->show();
    	feedbackbutton->setText(tr("feedback"));
 	feedbackbutton->show();
 	//std::random_device dev;
@@ -786,49 +785,39 @@ void Window::TestingSlot()
 				// Play the player audio 
 				player->play();	  
 				// Connect dobutton to detect if si is pressed by the user  
-				connect(sibutton, SIGNAL(clicked()), this, SLOT(SiPressedSlot()));
+				connect(tibutton, SIGNAL(clicked()), this, SLOT(TiPressedSlot()));
 			}	 
 
-		}
-
-    // Signal when Do is pressed           
+		}         
 	void Window::DoPressedSlot()
 		{
 			feedbackbutton->setText(tr("Well done!!"));
 		}
-    // Signal when Re is pressed
 	void Window::RePressedSlot()
 		{
 			feedbackbutton->setText(tr("Well done!!"));
-		}
-	// Signal when Mi is pressed	
+		}	
 	void Window::MiPressedSlot()
 		{
 			feedbackbutton->setText(tr("Well done!!"));
 		}
-	// Signal when Fa is pressed	
 	void Window::FaPressedSlot()
 		{
 			feedbackbutton->setText(tr("Well done!!"));
-		}
-	// Signal when So is pressed	
+		}	
 	void Window::SoPressedSlot()
 		{
 			feedbackbutton->setText(tr("Well done!!"));
 		}
-	// Signal when La is pressed	
 	void Window::LaPressedSlot()
 		{
 			feedbackbutton->setText(tr("Well done!!"));
 		}
-	// Signal when Si is pressed
-	void Window::SiPressedSlot()
+	void Window::TiPressedSlot()
 		{
 				feedbackbutton->setText(tr("Well done!!"));
 		}
 
-	
-	//  Function is used to quit the application 
 	void Window::quitApp()    
 		{ 
 			Window::close();

@@ -22,160 +22,175 @@ class Window : public QWidget
 	Q_OBJECT
 
 public:
-	Window(); // default constructor - called when a Window is declared without arguments
+	/**
+	 * @brief Show the QT window.
+	 * ******************************************************************************/
+	Window(); 
 
+	/**
+	 * @brief Destroy fftw function.
+	 * ******************************************************************************/
 	~Window();
 
+public slots:	
+	/** 
+	 * @brief Play the c scale video for learning.
+	 * @note This function works whenever the learning(pushbutton1) is pressed.
+	 * ******************************************************************************/
+	void playslot();     
 
+	/** 
+	 * @brief Quit the application. 
+	 * ******************************************************************************/
+	void quitApp();   
 
-public slots:
-	
-	/** function to play the c scale video */ 
-		void playslot();           
-
-    /** Function to handle proper shutdown of the window */
-		void quitApp();   
-
-    /** function that pause the video */
+    /** 
+	 * @brief Pause the learning video.
+	 * ******************************************************************************/
 		void pauseslot();    
 
-	/** function that resume the video */	 
-		void resumeslot();
+	/** 
+	 * @brief Resume the learning video.
+	 * ******************************************************************************/
+	void resumeslot();
 
-    /** function that starts taking microphone input  */
-		void AudioRecorderSlot();
+	/** 
+	 * @brief Start taking microphone input.
+	 * @note Record audio whenever pushbutton2 is pressed
+	 * ******************************************************************************/
+	void AudioRecorderSlot();
 
-    /** function that genrate random tone to test the user knowledge  */
-		void TestingSlot();
+	/** 
+	 * @brief Genrate random tone to test the user.
+	 * @note This function works whenever pushbutton3 is pressed.
+	 * ******************************************************************************/
+	void TestingSlot();
 
-    /** function that exit(back) the video or any other sub-phase */
-		void exitslot();
+	/** 
+	 * @brief Go back to the main page of the application.
+	 * @note This function can exit or stop any sub-phase.
+	 * ******************************************************************************/
+	void exitslot();
 
-	/** function that stop audio record */	
-		void stopRecording();
+	/** 
+	 * @brief Stop audio recording.
+	 * @note This function can exit or stop any sub-phase.
+	 * ******************************************************************************/
+	void stopRecording();
 
-    /** function that confirm that Do is pressed */
-		void DoPressedSlot();
+	/** 
+	 * @defgroup Note buttons press signal group.
+	 * @brief The signal when button is pressed.
+	 * @note Change the text of feedbackbutton into "Well done!!" when button 
+	 * is pressed.
+	 * @{
+	 * ******************************************************************************/
+	void DoPressedSlot();	///<Change the text of feedbackbutton into "Well done!!" when dobutton is pressed.
+	void RePressedSlot();	///<Change the text of feedbackbutton into "Well done!!" when rebutton is pressed.
+	void MiPressedSlot();	///<Change the text of feedbackbutton into "Well done!!" when mibutton is pressed.
+	void FaPressedSlot();	///<Change the text of feedbackbutton into "Well done!!" when fabutton is pressed.
+	void SoPressedSlot();	///<Change the text of feedbackbutton into "Well done!!" when sobutton is pressed.
+	void LaPressedSlot();	///<Change the text of feedbackbutton into "Well done!!" when labutton is pressed.
+	void TiPressedSlot();	///<Change the text of feedbackbutton into "Well done!!" when tibutton is pressed.
+	/**@}*/
 
-	/** function that confirm that Re is pressed */	
-		void RePressedSlot();
+	/** 
+	 * @brief Handle the state of the microphone.
+	 * @param newState can be StoppedState or ActiveState.
+	 * @note Finish recording when the status of QAudio is StoppedState.
+	 * @note Error massage will show in the pushbutton1.
+	 * @note Start recording when the status of QAudio is ActiveState.
+	 * ******************************************************************************/
+	void handleStateChanged(QAudio::State newState);
 
-	/* function that confirm that Mi is pressed */	
-		void MiPressedSlot();
+	/** 
+	 * @brief Read and deal with data from microphone input.
+	 * @note Set the volume threshold value, the voice which volume is low than it 
+	 * will not be handled
+	 * @note Set frequency range for each note.
+	 * @note Give "high" or "low" feedback to the user when singing each note 
+	 * inaccurately.
+	 * ******************************************************************************/
+	void readMicrophone();
 
-	/** function that confirm that Fa is pressed */	
-		void FaPressedSlot();
+	/** 
+	 * @brief Stop audio recording.
+	 * @note Recording status will change to StoppedState when clicking stop button.
+	 * @note QT window will turn back to the main page of the application when clicking 
+	 * stop button.
+	 * ******************************************************************************/
+	void audioexit();
 
-	/** function that confirm that So is pressed */	
-		void SoPressedSlot();
-
-	/** function that confirm that La is pressed */	
-		void LaPressedSlot();
-	
-	/** function that confirm that Si is pressed */
-		void SiPressedSlot();
-
-    /** function that handle the state of the microphone */
-		void handleStateChanged(QAudio::State newState);
-
-    /** function that read mic data */
-		void readMicrophone();
-
-		void audioexit();
-
-// internal variables for the window class
 private:
+	/** 
+	 * @defgroup The Clickable buttons in both main QT window and sub window.
+	 * @brief Pointers to QPushButtons to allow user to press any button on the QT window.
+	 * @note Change the text of feedbackbutton into "Well done!!" when button 
+	 * is pressed.
+	 * @{
+	 * ******************************************************************************/
+	QPushButton *pushbutton1;			///<"learning" button in main QT window.
+	QPushButton *pushbutton2;			///<"Recognising the tones" button in main QT window.
+	QPushButton *pushbutton3;			///<"Testing" button in main QT window.
+    QPushButton *quitbutton;			///<"Quit App"button in main QT window.
+	QPushButton *stopbutton;			///<"stop" button in the function of "learing".
+	QPushButton *resumebutton;			///"resume" button in the function of "Recognising the tones".
+	QPushButton *exitbutton;			///<"exit" button in main QT window.
+	QPushButton *audiostopbutton;		///<"stop" button in the function of "Recognising the tones".
+	QPushButton *dobutton;				///<"Do" button in the function of "Testing".
+	QPushButton *rebutton;				///<"Re" button in the function of "Testing".
+	QPushButton *mibutton;				///<"Mi" button in the function of "Testing".
+	QPushButton *fabutton;				///<"Fa" button in the function of "Testing".
+	QPushButton *sobutton;				///<"So" button in the function of "Testing".
+	QPushButton *labutton;				///<"La" button in the function of "Testing".
+	QPushButton *tibutton;				///<"Ti" button in the function of "Testing".
+	/**@}*/
 
-    //! Clickable button pointers.
-    /*! Pointers to QPushButtons to allow user to press any button on the window  */
- 	//** intialisation of pushbutton1 */
-	QPushButton *pushbutton1;
-	//** intialisation of pushbutton2 */
-	QPushButton *pushbutton2;
-	//** intialisation of pushbutton3 */
-	QPushButton *pushbutton3;
-	//** intialisation of quitbutton */
-    QPushButton *quitbutton;
-	//** intialisation of  stopbutton */
-	QPushButton *stopbutton;
-	//** intialisation of resumebutton */
-	QPushButton *resumebutton;
-	//** intialisation of exitbutton */
-	QPushButton *exitbutton;
-	//** intialisation of audiostopbutton */
-	QPushButton *audiostopbutton;
-	//** intialisation of dobutton */
-	QPushButton *dobutton;
-	//** intialisation of rebutton */
-	QPushButton *rebutton;
-	//** intialisation of mibutton */
-	QPushButton *mibutton;
-	//** intialisation of fabutton */
-	QPushButton *fabutton;
-	//** intialisation of sobutton */
-	QPushButton *sobutton;
-	//** intialisation of labutton */
-	QPushButton *labutton;
-	//** intialisation of sibutton */
-	QPushButton *sibutton;
-	//** intialisation of feedbackbutton */
- 	QPushButton *feedbackbutton;
-	 //** intialisation of text , text2, and text 3 */
-	QLineEdit *text, *text2, *text3;
+	/** 
+	 * @defgroup The unclickable buttons but show in both main QT window or sub window.
+	 * @brief Pointers to QPushButtons to allow user to press any button on the QT window.
+	 * @note Change the text of feedbackbutton into "Well done!!" when button 
+	 * is pressed.
+	 * @{
+	 * ******************************************************************************/
+ 	QPushButton *feedbackbutton;		///<"feedback"button in the function of "Testing".
+	QLineEdit *text, *text2, *text3;	///<Buttons for giving correct or "high" or "low" pitch feedback.
+	/**@}*/
 
-	/** Pointer to access recorded audio*/
-	QAudioRecorder *audioRecorder;
-    /** Pointer to an array containing video music*/
-	QMediaPlayer *player;
-    /** Pointer to access the video */
-    QVideoWidget* videoWidget;
-	/** Pointer to an array containing audio stuff*/
-    QAudioInput* audio; 
-	/** Pointer to change audio format*/
-	QAudioFormat format;
-     
+	/** 
+	 * @defgroup Other variables which invisible in both main QT window and sub window.
+	 * @brief .
+	 * @note Layout elements are from Qt itself: http://qt-project.org/doc/qt-4.8/classes.html.
+	 * @{
+	 * ******************************************************************************/
+	//QAudioRecorder *audioRecorder;	///<Access recorded audio.
+	QMediaPlayer *player;				///<An array object containing video music QMediaPlayer.
+    QVideoWidget* videoWidget;			///<A video widget object of QVideoWidget.
+    QAudioInput* audio; 				///<An array containing audio stuff.
+	QAudioFormat format;				///<Change audio format.
+	QVBoxLayout  *vLayout;				///<Vertical layout for QT main window.
+	QHBoxLayout  *hLayout;				///< Horizontal layout for QT main window.
+	/**@}*/
 
-	// layout elements from Qt itself http://qt-project.org/doc/qt-4.8/classes.html
-	QVBoxLayout  *vLayout;  // vertical layout
-	QHBoxLayout  *hLayout;  // horizontal layout
-
-    /** pointer to access fftinputbuffer */
-	double* fftinputbuffer;
-
-    /** variable to save the fftbuffsize */
-	int fftbuffsize;
-
-    /** pointer to access fftoutputbuffer */
-	fftw_complex* fftoutputbuffer;
-
-	/** function that execute the fft plan */
-	fftw_plan plan;
-
-    /** variable to intialise count as 0 */
-	int count=0;
-
-    /** variable to intialise the value of sampleRate */
-	double sampleRate = 48000; 
-	
-
-    /** variable to intialise the buffer time in ms  */
-	int bufferTime = 600.0; 
-
-	/** variable to store peakHeartz values */
-	double peakHertz;
-    /** variable to intialise peakHeartzScale and define which scale the user is using */
-	double peakHertzScale =523.25;
-	/** Intialise the lowest frequency detected by the software */
-    double lowestFrequency = 100 ;
-	/** Intialise the highest frequency detected by the software */
-	double highestFrequency = 1000;
-    /** pointer to access readmicarray values */
-	QByteArray* readmicarray;
-
-	/** vpointer to access readmic values */
-	QBuffer* readMic;
-
-
+	/** 
+	 * @defgroup Constant vaviables.
+	 * @brief .
+	 * @note 
+	 * @{
+	 * ******************************************************************************/
+	double* fftinputbuffer;				///<???(like what is the function of fftinputbuffer in code)
+	int fftbuffsize;					///<???
+	fftw_complex* fftoutputbuffer;		///<???
+	fftw_plan plan;						///<???
+	double sampleRate = 48000; 			///<???
+	int bufferTime = 600.0; 			///<???
+	double peakHertz;					///<???(store peakHeartz values)
+	double peakHertzScale =523.25;		///<define which scale the user is using
+    double lowestFrequency = 100 ;		///<the lowest frequency detected by the software
+	double highestFrequency = 1000;		///<the highest frequency detected by the software
+	QByteArray* readmicarray;			///<???(access readmicarray values)
+	QBuffer* readMic;					///<???(access readmic values)
+	/**@}*/
 };
 
 #endif // WINDOW_H
