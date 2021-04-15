@@ -19,7 +19,7 @@ To clone this git repository.
 To build:
 
 ```
-    cd qwt-example
+    cd Smart-Intonation
     cmake .
     make
 ```
