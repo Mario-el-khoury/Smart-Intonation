@@ -153,6 +153,8 @@ private:
 
 	/** vpointer to access readmic values */
 	QBuffer* readMic;
+	time_t t2 = 0;
+	
 
 
 };
