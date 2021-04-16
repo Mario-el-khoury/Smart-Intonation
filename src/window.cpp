@@ -7,7 +7,6 @@
 #include <iostream>
 #include <random>   // for random numbers
 #include <unistd.h>   // for delays   //usleep(3000000); sleep 3 seconds
-#include <pthread.h>
 #include <QString>
 
 /* open the constructer of the project*/
@@ -514,6 +513,7 @@ void Window::testingSlot()
 	labutton->show();
 	tibutton->show();
    	feedbackbutton->setText(tr("feedback"));
+	feedbackbutton->setStyleSheet("color: black; background-color: grey");   
 	feedbackbutton->show();
 	std::random_device dev;
     std::mt19937 rng(dev());
@@ -527,8 +527,13 @@ void Window::testingSlot()
 		player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/do.mp3").absolutePath()));
 		player->setVolume(90); 
 		player->play();	   
-		connect(dobutton, SIGNAL(clicked()), this, SLOT(DoPressedSlot()));
-
+		connect(dobutton, SIGNAL(clicked()), this, SLOT(feedbackSlot()));
+		connect(rebutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+		connect(mibutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+		connect(fabutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+		connect(sobutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+		connect(labutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+		connect(tibutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
 	}
   else if (dist7(rng)==2)
    { 
@@ -536,8 +541,13 @@ void Window::testingSlot()
 		player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/re.mp3").absolutePath()));
 		player->setVolume(90); 
 		player->play();
-		connect(rebutton, SIGNAL(clicked()), this, SLOT(RePressedSlot()));
-
+		connect(dobutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+		connect(rebutton, SIGNAL(clicked()), this, SLOT(feedbackSlot()));
+		connect(mibutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+		connect(fabutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+		connect(sobutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+		connect(labutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+		connect(tibutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
 	 }
   else if (dist7(rng)==3)
    { 
@@ -545,7 +555,13 @@ void Window::testingSlot()
 		player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/mi.mp3").absolutePath()));
 		player->setVolume(90); 
 		player->play();
-		connect(mibutton, SIGNAL(clicked()), this, SLOT(MiPressedSlot()));
+		connect(dobutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+		connect(rebutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+		connect(mibutton, SIGNAL(clicked()), this, SLOT(feedbackSlot()));
+		connect(fabutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+		connect(sobutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+		connect(labutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+		connect(tibutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
 	}
 	 
   else if (dist7(rng)==4)
@@ -554,7 +570,13 @@ void Window::testingSlot()
 	    player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/fa.mp3").absolutePath()));
 		player->setVolume(90); 
 		player->play();
-		connect(fabutton, SIGNAL(clicked()), this, SLOT(FaPressedSlot()));
+		connect(dobutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+		connect(rebutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+		connect(mibutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+		connect(fabutton, SIGNAL(clicked()), this, SLOT(feedbackSlot()));
+		connect(sobutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+		connect(labutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+		connect(tibutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
    }
  else if (dist7(rng)==5)
    { 
@@ -562,7 +584,13 @@ void Window::testingSlot()
 		player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/so.mp3").absolutePath()));
 		player->setVolume(90); 
 		player->play();
-		connect(sobutton, SIGNAL(clicked()), this, SLOT(SoPressedSlot()));
+		connect(dobutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+		connect(rebutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+		connect(mibutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+		connect(fabutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+		connect(sobutton, SIGNAL(clicked()), this, SLOT(feedbackSlot()));
+		connect(labutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+		connect(tibutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
 	}	 
 else if (dist7(rng)==6)
    { 
@@ -570,7 +598,13 @@ else if (dist7(rng)==6)
 		player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/la.mp3").absolutePath()));
 		player->setVolume(90); 
 		player->play();
-		connect(labutton, SIGNAL(clicked()), this, SLOT(LaPressedSlot()));
+		connect(dobutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+		connect(rebutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+		connect(mibutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+		connect(fabutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+		connect(sobutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+		connect(labutton, SIGNAL(clicked()), this, SLOT(feedbackSlot()));
+		connect(tibutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
 	 }	 
  else if (dist7(rng)==7)
    { 
@@ -578,15 +612,33 @@ else if (dist7(rng)==6)
 		player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/ti.mp3").absolutePath()));
 		player->setVolume(90); 
 		player->play();
-		connect(tibutton, SIGNAL(clicked()), this, SLOT(TiPressedSlot()));
+		connect(dobutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+		connect(rebutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+		connect(mibutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+		connect(fabutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+		connect(sobutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+		connect(labutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+		connect(tibutton, SIGNAL(clicked()), this, SLOT(feedbackSlot()));
 	 }	 
 
 }
 
+void Window::feedbackSlot()
+{
+	feedbackbutton->setText(tr("Well done!!"));
+	feedbackbutton->setStyleSheet("color: black; background-color: darkseagreen");
+}
+
+void Window::feedbackWrong()
+{
+	feedbackbutton->setText(tr("Wrong!!"));
+	feedbackbutton->setStyleSheet("color: black; background-color: lightcoral");
+}
+
  /*                  */
-bool Window::DoPressedSlot()
+void Window::DoPressedSlot()
  {
-    //feedbackbutton->setText(tr("Well done!!"));
+    
 	player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/do.mp3").absolutePath()));
 	player->setVolume(90); 
 	player->play();
@@ -599,9 +651,10 @@ bool Window::DoPressedSlot()
 	tibutton->setStyleSheet("color: black; background-color: ivory");
  }
 
-bool Window::RePressedSlot()
+void Window::RePressedSlot()
  {
-    //feedbackbutton->setText(tr("Well done!!"));
+    // feedbackbutton->setText(tr("Well done!!"));
+	// feedbackbutton->setStyleSheet("color: black; background-color: lightcoral");
 	player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/re.mp3").absolutePath()));
 	player->setVolume(90); 
 	player->play();
@@ -613,9 +666,10 @@ bool Window::RePressedSlot()
 	labutton->setStyleSheet("color: black; background-color: ivory");
 	tibutton->setStyleSheet("color: black; background-color: ivory");
  }
- bool Window::MiPressedSlot()
+ void Window::MiPressedSlot()
  {
-    //feedbackbutton->setText(tr("Well done!!"));
+    // feedbackbutton->setText(tr("Well done!!"));
+	// feedbackbutton->setStyleSheet("color: black; background-color: lightcoral");
 	player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/mi.mp3").absolutePath()));
 	player->setVolume(90); 
 	player->play();
@@ -627,9 +681,10 @@ bool Window::RePressedSlot()
 	labutton->setStyleSheet("color: black; background-color: ivory");
 	tibutton->setStyleSheet("color: black; background-color: ivory");
  }
-bool Window::FaPressedSlot()
+void Window::FaPressedSlot()
  {
-    feedbackbutton->setText(tr("Well done!!"));
+    // feedbackbutton->setText(tr("Well done!!"));
+	// feedbackbutton->setStyleSheet("color: black; background-color: lightcoral");
 	player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/fa.mp3").absolutePath()));
 	player->setVolume(90); 
 	player->play();
@@ -641,9 +696,10 @@ bool Window::FaPressedSlot()
 	labutton->setStyleSheet("color: black; background-color: ivory");
 	tibutton->setStyleSheet("color: black; background-color: ivory");
  }
-bool Window::SoPressedSlot()
+void Window::SoPressedSlot()
  {
-    feedbackbutton->setText(tr("Well done!!"));
+    // feedbackbutton->setText(tr("Well done!!"));
+	// feedbackbutton->setStyleSheet("color: black; background-color: lightcoral");
 	player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/so.mp3").absolutePath()));
 	player->setVolume(90); 
 	player->play();
@@ -655,9 +711,10 @@ bool Window::SoPressedSlot()
 	labutton->setStyleSheet("color: black; background-color: ivory");
 	tibutton->setStyleSheet("color: black; background-color: ivory");
  }
-bool Window::LaPressedSlot()
+void Window::LaPressedSlot()
  {
-    //feedbackbutton->setText(tr("Well done!!"));
+    // feedbackbutton->setText(tr("Well done!!"));
+	// feedbackbutton->setStyleSheet("color: black; background-color: lightcoral");
 	player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/la.mp3").absolutePath()));
 	player->setVolume(90); 
 	player->play();
@@ -669,9 +726,10 @@ bool Window::LaPressedSlot()
 	labutton->setStyleSheet("color: black; background-color: silver");
 	tibutton->setStyleSheet("color: black; background-color: ivory");
  }
-bool Window::TiPressedSlot()
+void Window::TiPressedSlot()
  {
-    //feedbackbutton->setText(tr("Well done!!"));
+    // feedbackbutton->setText(tr("Well done!!"));
+	// feedbackbutton->setStyleSheet("color: black; background-color: lightcoral");
 	player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/ti.mp3").absolutePath()));
 	player->setVolume(90); 
 	player->play();

@@ -54,25 +54,25 @@ public slots:
 		void stopRecording();
 
     /** function that confirm that Do is pressed */
-		bool DoPressedSlot();
+		void DoPressedSlot();
 
 	/** function that confirm that Re is pressed */	
-		bool RePressedSlot();
+		void RePressedSlot();
 
 	/* function that confirm that Mi is pressed */	
-		bool MiPressedSlot();
+		void MiPressedSlot();
 
 	/** function that confirm that Fa is pressed */	
-		bool FaPressedSlot();
+		void FaPressedSlot();
 
 	/** function that confirm that So is pressed */	
-		bool SoPressedSlot();
+		void SoPressedSlot();
 
 	/** function that confirm that La is pressed */	
-		bool LaPressedSlot();
+		void LaPressedSlot();
 	
 	/** function that confirm that Si is pressed */
-		bool TiPressedSlot();
+		void TiPressedSlot();
 
     /** function that handle the state of the microphone */
 		void handleStateChanged(QAudio::State newState);
@@ -82,6 +82,8 @@ public slots:
 
 		void pianoPlayer();
 		void clearnotes();
+		void feedbackSlot();
+		void feedbackWrong();
 
 // internal variables for the window class
 private:
