@@ -19,7 +19,7 @@ To clone this git repository.
 To build:
 
 ```
-    cd qwt-example
+    cd Smarto
     cmake .
     make
 ```
@@ -27,7 +27,7 @@ To build:
 To run:
 
 ```
-    ./qwt-example
+    ./Smarto
 ```
 ## License
 
