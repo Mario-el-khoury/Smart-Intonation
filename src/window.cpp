@@ -603,9 +603,6 @@ void Window::readMicrophone()
 	}
 }
 
-}
-}
- 
 void Window::stopRecording()
 {
     audio->stop();
@@ -932,12 +929,6 @@ void Window::quitApp()
     Window::close();
 }
 
-//  Function is used to quit the application 
-void Window::quitApp()    
-	{ 
-			Window::close();
-	
-	}
 
 
 
