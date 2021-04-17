@@ -26,9 +26,8 @@ music software for intonation training
 </a>
 
 <br/>
-⭐️ From [Mario-el-khoury](https://github.com/Mario-el-khoury)
 
-<h3> 🤝🏻 &nbsp;Connect with Me </h3>
+<h3> 🤝🏻 &nbsp;Connect with us </h3>
 
 <p align="center">
 <a href="https://www.linkedin.com/in/mario-el-khoury-027216158"><img alt="LinkedIn" src="https://img.shields.io/badge/LinkedIn-Mario%20El%20Khoury-blue?style=flat-square&logo=linkedin"></a>
@@ -37,7 +36,9 @@ music software for intonation training
         <img src="https://img.shields.io/badge/-YouTube-242424?style=flat-square&logo=circle&logoColor=White" /></a>
 </p>
 
-⭐️ From [Mario-el-khoury](https://github.com/Mario-el-khoury)
+⭐️ Collaborator 1: [Mario-el-khoury](https://github.com/Mario-el-khoury)
+⭐️ Collaborator 2: [Zi-han-Huang](https://github.com/Zi-han-Huang)
+⭐️ Collaborator 3: [Jiangjiajun-Dominic](https://github.com/Jiangjiajun-Dominic)
 
 ## Overview
 Smart Intonation is a musical software aimed to teach the pitch to new music students, the main parts used in this software are the sound card of the pc and a linux operating system (Ubunto). The software is devided into three phases. The first step allow the user to play a C-scale video in order to start learning the difference between each tone. In the second step, the software generates random tones and the user must know which tone is generated. In the last step, the software should ask the user to sing a random tone, the software will then compare the frequecy of the tone to the frequency of the user using fast fourier transform. the steps are followed by a real-time feedback to make the user perform better.
