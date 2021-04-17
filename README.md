@@ -26,18 +26,18 @@ music software for intonation training
 </a>
 
 <br/>
-⭐️ From [Mario-el-khoury](https://github.com/Mario-el-khoury/Smart-Intonation.git)
+⭐️ From [Mario-el-khoury](https://github.com/Mario-el-khoury)
 
 <h3> 🤝🏻 &nbsp;Connect with Me </h3>
 
 <p align="center">
-<a href="https://www.linkedin.com/in/mario-el-khoury-027216158"><img alt="LinkedIn" src="https://img.shields.io/badge/LinkedIn-Aditya%20Vikram%20Singh-blue?style=flat-square&logo=linkedin"></a>
-<a href="https://www.instagram.com/smartintonation/channel/"><img alt="Instagram" src="https://img.shields.io/badge/Instagram-adityavs__-blue?style=flat-square&logo=instagram"></a>
+<a href="https://www.linkedin.com/in/mario-el-khoury-027216158"><img alt="LinkedIn" src="https://img.shields.io/badge/LinkedIn-Mario%20El%20Khoury-blue?style=flat-square&logo=linkedin"></a>
+<a href="https://www.instagram.com/smartintonation/channel/"><img alt="Instagram" src="https://img.shields.io/badge/Instagram-smartintonation-blue?style=flat-square&logo=instagram"></a>
  <a href="https://www.youtube.com/channel/UCLF5YnaRpRm0oMdEWnp-TTw" alt="YouTube">
         <img src="https://img.shields.io/badge/-YouTube-242424?style=flat-square&logo=circle&logoColor=White" /></a>
 </p>
 
-⭐️ From [Mario-el-khoury](https://github.com/Mario-el-khoury/Smart-Intonation.git)
+⭐️ From [Mario-el-khoury](https://github.com/Mario-el-khoury)
 
 ## Overview
 Smart Intonation is a musical software aimed to teach the pitch to new music students, the main parts used in this software are the sound card of the pc and a linux operating system (Ubunto). The software is devided into three phases. The first step allow the user to play a C-scale video in order to start learning the difference between each tone. In the second step, the software generates random tones and the user must know which tone is generated. In the last step, the software should ask the user to sing a random tone, the software will then compare the frequecy of the tone to the frequency of the user using fast fourier transform. the steps are followed by a real-time feedback to make the user perform better.
