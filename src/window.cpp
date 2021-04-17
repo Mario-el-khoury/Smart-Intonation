@@ -197,8 +197,7 @@ Window::Window()
 	hLayout = new QHBoxLayout;
 	hLayout->addLayout(vLayout);	
 	hLayout->addWidget(stopbutton); 
-	hLayout->addWidget(resumebutton);
-	hLayout->addWidget(melody);
+	hLayout->addWidget(resumebutton); 
 	hLayout->addWidget(dobutton);
 	hLayout->addWidget(rebutton);
 	hLayout->addWidget(mibutton);
@@ -212,9 +211,6 @@ Window::Window()
 	hLayout->addWidget(stoprecording);
 	hLayout->addWidget(exitbutton);
 	hLayout->addWidget(videoWidget);  
-
-	
-
 	videoWidget->hide();
 	setLayout(hLayout);
 
@@ -231,7 +227,6 @@ Window::Window()
 }
 
 Window::~Window() {
-	// destroy fftw function 
 	fftw_destroy_plan(plan);
 	fftw_cleanup();
 }
@@ -242,16 +237,6 @@ void Window::playSlot()
 	exitbutton->show();
 	stopbutton->show();
 	resumebutton->show();
-	dobutton->hide();
-	rebutton->hide();
-	mibutton->hide();
-	fabutton->hide();
-	sobutton->hide();
-	labutton->hide();
-	tibutton->hide();
-	melody->hide();
-	feedbackbutton->hide();
-
     videoWidget->show();
     player->play();                 //play the song
 	stopbutton->setEnabled(true);
@@ -366,7 +351,6 @@ void Window::readMicrophone()
 	}
 	
 	datain.clear();
-	// execute the fft function to find the frequency 
 	fftw_execute(plan);
 	
 	//find maximum peak in fftouputbuffer
@@ -375,7 +359,8 @@ void Window::readMicrophone()
     // find the magnitude of the signal between two intervals
 	for (int i =(int)((lowestFrequency *audio->bufferSize())/sampleRate); i<(int)((highestFrequency*audio->bufferSize())/sampleRate); i++) {						
 		double mag = sqrt(fftoutputbuffer[i][0]*fftoutputbuffer[i][0] +
-		fftoutputbuffer[i][1]*fftoutputbuffer[i][1]); 
+							fftoutputbuffer[i][1]*fftoutputbuffer[i][1]); //get magnitude
+
 		if(mag > peakmag){
 			peakmag = mag;
 			peakIndex=i;
@@ -617,7 +602,7 @@ void Window::handleStateChanged(QAudio::State newState)
                 // Error handling
     			learningbutton->setText(tr("Error"));  // testing if this statement works
             } else {
-                // Finished recording 
+                // Finished recording
    				// testing if this statement works
 				learningbutton->setEnabled(true);     
 				recognizingbutton->setEnabled(true);
@@ -928,9 +913,6 @@ void Window::quitApp()
 { 
     Window::close();
 }
-
-
-
 
 
 

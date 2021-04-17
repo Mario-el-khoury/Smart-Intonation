@@ -3,7 +3,7 @@
 #include <qwt/qwt_arrow_button.h>
 #include <qwt/qwt_plot.h>
 #include <qwt/qwt_plot_curve.h>
-#include <qwt/qwt_plot_textlabel.h>                
+#include <qwt/qwt_plot_textlabel.h>                  //Text
 #include <QBoxLayout>
 #include <QtMultimedia>
 #include <QVideoWidget>
@@ -29,7 +29,7 @@ public:
 	~Window();
 
 
-/** public  functions for the window class */
+
 public slots:
 	
 	/** function to play the c scale video */ 
@@ -98,25 +98,14 @@ private:
 	QPushButton *recognizingbutton;
 	QPushButton *testingbutton;
     QPushButton *quitbutton;
-	//** Declaration of  stopbutton */
 	QPushButton *stopbutton;
-	//** Declaration of resumebutton */
 	QPushButton *resumebutton;
-	//** Declaration of exitbutton */
 	QPushButton *exitbutton;
-	//** Declaration of audiostopbutton */
-	QPushButton *audiostopbutton;
-	//** Declaration of dobutton */
 	QPushButton *dobutton;
-	//** Declaration of rebutton */
 	QPushButton *rebutton;
-	//** Declaration of mibutton */
 	QPushButton *mibutton;
-	//** Declaration of fabutton */
 	QPushButton *fabutton;
-	//** Declaration of sobutton */
 	QPushButton *sobutton;
-	//** Declaration of labutton */
 	QPushButton *labutton;
 	QPushButton *tibutton;
 	QPushButton *feedbackbutton;
@@ -177,6 +166,9 @@ private:
 	/** Pointer to access readmic values */
 	QBuffer* readMic;
 	time_t t2 = 0;
+	
+
+
 };
 
 #endif // WINDOW_H
