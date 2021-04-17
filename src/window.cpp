@@ -383,8 +383,9 @@ void Window::readMicrophone()
 				peakHertz /= 2;
 			}
 
-			if(( peakHertz >= pow (2, -1.0/12.0)) && (peakHertz < pow ( 2,1.0/12.0)) && (difftime(t1, t2) > duration)){		 
-				if((peakHertz <= pow (2, 0.3/12.0))&& (peakHertz >= pow (2,-0.3/12.0))){
+			if(( peakHertz >= pow (2, -1.0/12.0)) && (peakHertz < pow ( 2,1.0/12.0)) && (difftime(t1, t2) > duration)){	
+				//peakHertz(Do) = pow (2, 0/12.0));
+				if((peakHertz <= pow (2, 0.5/12.0)) && (peakHertz >= pow (2,-0.5/12.0))){
 					qDebug() << "Do"<< " "<< "t2:" << ctime(&t2) << "______";
 					str.append("1 "); 
 					melody->setText(str);
@@ -397,13 +398,13 @@ void Window::readMicrophone()
 					labutton->setStyleSheet("color: black; background-color: ivory");
 					tibutton->setStyleSheet("color: black; background-color: ivory");
 				}
-				else if((peakHertz > pow (2, 0.3/12.0)) &&  (peakHertz < pow ( 2,1.0/12.0))){
+				else if((peakHertz > pow (2, 0.5/12.0)) &&  (peakHertz < pow (2, 1.0/12.0))){
 					text->clear();	
 					text3->setText("High Do!");
 					text->setStyleSheet("color: black; background-color: white");
 					text3->setStyleSheet("color: black; background-color: red");
 				}
-				else if((peakHertz < pow (2, -0.3/12.0)) && (peakHertz > pow (2, -1.0/12.0))){	
+				else if((peakHertz < pow (2, -0.5/12.0)) && (peakHertz > pow (2, -1.0/12.0))){	
 					text3->clear();
 					text->setText("Low Do!");
 					text3->setStyleSheet("color: black; background-color: white");
@@ -411,7 +412,8 @@ void Window::readMicrophone()
 				}
 			}	
 			else if ((peakHertz >= pow (2, 1.0/12.0)) && (peakHertz < pow (2, 3.0/12.0)) && (difftime(t1, t2) > duration)){
-					if((peakHertz >= pow (2,1.7/12.0))&& (peakHertz <= pow (2,2.3/12.0))){
+					//peakHertz(Re) = pow (2, 2/12.0));
+					if((peakHertz >= pow (2,1.5/12.0))&& (peakHertz <= pow (2,2.5/12.0))){
 						qDebug() << "Re"<< " "<< "t2:" << ctime(&t2) << "______";;
 						str.append("2 "); 
 						melody->setText(str);
@@ -424,13 +426,13 @@ void Window::readMicrophone()
 						labutton->setStyleSheet("color: black; background-color: ivory");
 						tibutton->setStyleSheet("color: black; background-color: ivory");
 					}
-					else if((peakHertz > pow (2,2.3/12.0))&& (peakHertz < pow (2,3.0/12.0))){
+					else if((peakHertz > pow (2,2.5/12.0))&& (peakHertz < pow (2,3.0/12.0))){
 						text->clear();	
 						text3->setText("High Re!");
 						text->setStyleSheet("color: black; background-color: white");
 						text3->setStyleSheet("color: black; background-color: red");
 					}
-					else if((peakHertz > pow (2,1.0/12.0))&& (peakHertz < pow (2,1.7/12.0))){	
+					else if((peakHertz > pow (2,1.0/12.0))&& (peakHertz < pow (2,1.5/12.0))){	
 						text3->clear();
 						text->setText("Low Re!");
 						text3->setStyleSheet("color: black; background-color: white");
@@ -438,8 +440,8 @@ void Window::readMicrophone()
 					}
 			}
 			else if ((peakHertz >= pow (2, 3.0/12.0)) && (peakHertz < pow (2, 4.5/12.0)) && (difftime(t1, t2) > duration)){
-					//	double note = pow (2, 3.75/12.0);
-					if ((peakHertz >= pow (2,3.525/12.0))&& (peakHertz <= pow (2,3.975/12.0))){
+					//peakHertz(Mi) = pow (2, 4/12.0);
+					if ((peakHertz >= pow (2,3.75/12.0))&& (peakHertz <= pow (2,4.25/12.0))){
 						qDebug() << "Mi"<< " "<< "t2" << " " << ctime(&t2) << "______";;
 						str.append("3 ");
 						melody->setText(str); 
@@ -453,13 +455,13 @@ void Window::readMicrophone()
 						labutton->setStyleSheet("color: black; background-color: ivory");
 						tibutton->setStyleSheet("color: black; background-color: ivory");
 					}
-					else if((peakHertz > pow (2, 3.975/12.0)) && (peakHertz < pow (2,4.5/12.0))){
+					else if((peakHertz > pow (2, 4.25/12.0)) && (peakHertz < pow (2, 4.5/12.0))){
 						text->clear();	
 						text3->setText("High Mi!");
 						text->setStyleSheet("color: black; background-color: white");
 						text3->setStyleSheet("color: black; background-color: red");
 					}
-					else if((peakHertz > pow (2, 3.0/12.0)) && (peakHertz <= pow (2,3.525/12.0))){
+					else if((peakHertz > pow (2, 3.0/12.0)) && (peakHertz <= pow (2, 3.75/12.0))){
 						text3->clear();
 						text->setText("Low Mi!");
 						text3->setStyleSheet("color: black; background-color: white");
@@ -467,8 +469,8 @@ void Window::readMicrophone()
 					}	
 			}	
 			else if((peakHertz >= pow ( 2,4.5/12.0)) && (peakHertz < pow ( 2,6.0/12.0))&& (difftime(t1, t2) > duration)){
-					//	double note = pow (2, 5.25/12.0);
-					if ((peakHertz >= pow (2, 5.025/12.0)) && (peakHertz <= pow (2, 5.475/12.0))){
+					//	peakHertz(Fa)= pow (2, 5/12.0);
+					if ((peakHertz >= pow (2, 4.75/12.0)) && (peakHertz <= pow (2, 5.5/12.0))){
 						qDebug() << "Fa"<< " "<< "t2:" << ctime(&t2) << "______";;
 						str.append("4 "); 
 						melody->setText(str);
@@ -481,13 +483,13 @@ void Window::readMicrophone()
 						labutton->setStyleSheet("color: black; background-color: ivory");
 						tibutton->setStyleSheet("color: black; background-color: ivory");
 					}
-					else if((peakHertz > pow (2, 5.475/12.0)) && (peakHertz < pow (2, 6.0/12.0))){
+					else if((peakHertz > pow (2, 5.5/12.0)) && (peakHertz < pow (2, 6.0/12.0))){
 						text->clear();	
 						text->setStyleSheet("color: black; background-color: white");
 						text3->setStyleSheet("color: black; background-color: red");
 						text3->setText("High Fa!");
 					}
-					else if((peakHertz > pow (2, 4.5/12.0)) && (peakHertz < pow (2, 5.025/12.0))){	
+					else if((peakHertz > pow (2, 4.5/12.0)) && (peakHertz < pow (2, 4.75/12.0))){	
 						text3->clear();
 						text->setText("Low Fa!");
 						text3->setStyleSheet("color: black; background-color: white");
@@ -495,8 +497,8 @@ void Window::readMicrophone()
 					}
 			} 
 			else if ((peakHertz >= pow ( 2, 6.0/12.0))  && (peakHertz < pow ( 2, 8.0/12.0))&& (difftime(t1, t2) > duration)){
-					//  double note = pow (2, 7.0/12.0);
-					if ((peakHertz >= pow (2, 6.7/12.0)) && (peakHertz <= pow (2, 7.3/12.0))){
+					//  peakHertz(So)= pow (2, 7.0/12.0);
+					if ((peakHertz >= pow (2, 6.5/12.0)) && (peakHertz <= pow (2, 7.5/12.0))){
 						qDebug() << "So"<< " "<< "t2:" << ctime(&t2) << "______";;
 						QString note = str.append("5 "); 
 						melody->setText(str);
@@ -509,13 +511,13 @@ void Window::readMicrophone()
 						labutton->setStyleSheet("color: black; background-color: ivory");
 						tibutton->setStyleSheet("color: black; background-color: ivory");
 					}
-					else if ((peakHertz > pow (2, 7.3/12.0)) && (peakHertz < pow (2, 8.0/12.0))){
+					else if ((peakHertz > pow (2, 7.5/12.0)) && (peakHertz < pow (2, 8.0/12.0))){
 						text->clear();	
 						text3->setText("High So!");
 						text->setStyleSheet("color: black; background-color: white");
 						text3->setStyleSheet("color: black; background-color: red");
 					}
-					else if ((peakHertz > pow (2, 6.0/12.0)) && (peakHertz < pow (2, 6.7/12.0))){
+					else if ((peakHertz > pow (2, 6.0/12.0)) && (peakHertz < pow (2, 6.5/12.0))){
 						text3->clear();
 						text->setText("Low So!");
 						text3->setStyleSheet("color: black; background-color: white");
@@ -523,8 +525,8 @@ void Window::readMicrophone()
 					}	
 			}
 			else if((peakHertz >= pow (2, 8.0/12.0)) && (peakHertz < pow (2, 10.0/12.0))&& (difftime(t1, t2) > duration)){
-					//	double note = pow (2, 9.0/12.0);			
-					if ((peakHertz >= pow (2, 8.7/12.0)) && (peakHertz <= pow (2, 9.3/12.0))){
+					//	peakHertz(La)= pow (2, 9.0/12.0);			
+					if ((peakHertz >= pow (2, 8.5/12.0)) && (peakHertz <= pow (2, 9.5/12.0))){
 						qDebug() << "La"<< " "<< "t2:" << ctime(&t2) << "______";;
 						QString note = str.append("6 ");
 						melody->setText(str); 
@@ -537,13 +539,13 @@ void Window::readMicrophone()
 						labutton->setStyleSheet("color: black; background-color: darkseagreen");
 						tibutton->setStyleSheet("color: black; background-color: ivory");
 					}
-					else if((peakHertz > pow (2, 9.3/12.0)) && (peakHertz < pow (2, 10.0/12.0))){
+					else if((peakHertz > pow (2, 9.5/12.0)) && (peakHertz < pow (2, 10.0/12.0))){
 						text->clear();	
 						text->setStyleSheet("color: black; background-color: white");
 						text3->setStyleSheet("color: black; background-color: red");
 						text3->setText("High La!");
 					}
-					else if((peakHertz > pow (2, 8.0/12.0)) && (peakHertz < pow (2, 8.7/12.0))){
+					else if((peakHertz > pow (2, 8.0/12.0)) && (peakHertz < pow (2, 8.5/12.0))){
 						text->clear();	
 						text3->clear();
 						text->setText("Low La!");
@@ -551,9 +553,9 @@ void Window::readMicrophone()
 						text->setStyleSheet("color: black; background-color: red");
 					}				
 			}
-			else if ((peakHertz >= pow (2, 10.0/12.0)) && (peakHertz < pow (2, 11.5/12.0)) && (difftime(t1, t2) > duration)){		
-					// 	double note = pow (2, 10.75/12.0);
-					if ((peakHertz >= pow (2, 10.525/12.0)) && (peakHertz <= pow (2, 10.975/12.0))){
+			else if ((peakHertz >= pow (2, 10.0/12.0)) && (peakHertz < pow (2, 12.0/12.0)) && (difftime(t1, t2) > duration)){		
+					// 	peakHertz(Ti) = pow (2, 11/12.0);
+					if ((peakHertz >= pow (2, 10.5/12.0)) && (peakHertz <= pow (2, 11.5/12.0))){
 						qDebug() << "Ti"<< " "<< "t2:" << ctime(&t2) << "______";;
 						QString note = str.append("7 ");
 						melody->setText(str);
@@ -566,13 +568,13 @@ void Window::readMicrophone()
 						labutton->setStyleSheet("color: black; background-color: ivory");
 						tibutton->setStyleSheet("color: black; background-color: darkseagreen");
 					}
-				else if ((peakHertz > pow (2, 10.975/12.0)) &&  (peakHertz < pow ( 2,11.5/12.0))){
+				else if ((peakHertz > pow (2, 11.5/12.0)) &&  (peakHertz < pow ( 2,12/12.0))){
 							text->clear();	
 							text->setStyleSheet("color: black; background-color: white");
 							text3->setStyleSheet("color: black; background-color: red");
 							text3->setText("High Ti!");
 				}	
-				else if ((peakHertz < pow (2, 10.525/12.0)) && (peakHertz > pow (2, 10/12.0))){
+				else if ((peakHertz < pow (2, 10.5/12.0)) && (peakHertz > pow (2, 10/12.0))){
 							text3->clear();
 							text3->setStyleSheet("color: black; background-color: white");
 							text->setStyleSheet("color: black; background-color: red");
