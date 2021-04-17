@@ -368,7 +368,7 @@ void Window::readMicrophone()
 		
 	}
 	
-	if (peakmag > 80000){
+	if (peakmag > 100000){
 		time_t t1=time(NULL);
 		static double duration = 0.3;
 		peakHertz = peakIndex * (sampleRate/audio->bufferSize());
@@ -583,6 +583,7 @@ void Window::readMicrophone()
 				text->clear();
 				text3->setStyleSheet("color: black; background-color: white");
 				text->setStyleSheet("color: black; background-color: white");
+				pianoPlayer();
 			}
 		}
 	}
@@ -649,13 +650,18 @@ void Window::testingSlot()
     randomNumber = (rand() % 7) + 1;
     qDebug() << randomNumber;
 	}
-  
-   if (dist7(rng)==1)
-	{  
+   
+   if (randomNumber==1)
+	{   
+		// reset player from begining 
 		player = new QMediaPlayer;
+		// Assign the do.mp3 to player 
 		player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/do.mp3").absolutePath()));
+		// Set player volume 
 		player->setVolume(90); 
-		player->play();	   
+		// Play the player audio 
+		player->play();	  
+		// Connect dobutton to detect if do is pressed by the user  
 		connect(dobutton, SIGNAL(clicked()), this, SLOT(feedbackSlot()));
 		connect(rebutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
 		connect(mibutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
@@ -663,92 +669,123 @@ void Window::testingSlot()
 		connect(sobutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
 		connect(labutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
 		connect(tibutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+		
 	}
-  else if (dist7(rng)==2)
-   { 
-		player = new QMediaPlayer;
-		player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/re.mp3").absolutePath()));
-		player->setVolume(90); 
-		player->play();
-		connect(dobutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
-		connect(rebutton, SIGNAL(clicked()), this, SLOT(feedbackSlot()));
-		connect(mibutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
-		connect(fabutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
-		connect(sobutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
-		connect(labutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
-		connect(tibutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
-	 }
-  else if (dist7(rng)==3)
-   { 
-		player = new QMediaPlayer;
-		player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/mi.mp3").absolutePath()));
-		player->setVolume(90); 
-		player->play();
-		connect(dobutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
-		connect(rebutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
-		connect(mibutton, SIGNAL(clicked()), this, SLOT(feedbackSlot()));
-		connect(fabutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
-		connect(sobutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
-		connect(labutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
-		connect(tibutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
-	}
-	 
-  else if (dist7(rng)==4)
-   { 
-		player = new QMediaPlayer;
-	    player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/fa.mp3").absolutePath()));
-		player->setVolume(90); 
-		player->play();
-		connect(dobutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
-		connect(rebutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
-		connect(mibutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
-		connect(fabutton, SIGNAL(clicked()), this, SLOT(feedbackSlot()));
-		connect(sobutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
-		connect(labutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
-		connect(tibutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
-   }
- else if (dist7(rng)==5)
-   { 
-		player = new QMediaPlayer;
-		player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/so.mp3").absolutePath()));
-		player->setVolume(90); 
-		player->play();
-		connect(dobutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
-		connect(rebutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
-		connect(mibutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
-		connect(fabutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
-		connect(sobutton, SIGNAL(clicked()), this, SLOT(feedbackSlot()));
-		connect(labutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
-		connect(tibutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
-	}	 
-else if (dist7(rng)==6)
-   { 
-		player = new QMediaPlayer;
-		player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/la.mp3").absolutePath()));
-		player->setVolume(90); 
-		player->play();
-		connect(dobutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
-		connect(rebutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
-		connect(mibutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
-		connect(fabutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
-		connect(sobutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
-		connect(labutton, SIGNAL(clicked()), this, SLOT(feedbackSlot()));
-		connect(tibutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
-	 }	 
- else if (dist7(rng)==7)
-   { 
-		player = new QMediaPlayer;
-		player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/ti.mp3").absolutePath()));
-		player->setVolume(90); 
-		player->play();
-		connect(dobutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
-		connect(rebutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
-		connect(mibutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
-		connect(fabutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
-		connect(sobutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
-		connect(labutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
-		connect(tibutton, SIGNAL(clicked()), this, SLOT(feedbackSlot()));
-	 }	 
+  		else if (randomNumber==2)
+  		 { 
+				// reset player from begining 
+				player = new QMediaPlayer;
+				// Assign the re.mp3 to player 
+				player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/re.mp3").absolutePath()));
+				// Set player volume 
+				player->setVolume(90); 
+				// Play the player audio 
+				player->play();	  
+				// Connect dobutton to detect if re is pressed by the user  
+				connect(dobutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+				connect(rebutton, SIGNAL(clicked()), this, SLOT(feedbackSlot()));
+				connect(mibutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+				connect(fabutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+				connect(sobutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+				connect(labutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+				connect(tibutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+
+			}
+		else if (randomNumber==3)
+		{  
+				// reset player from begining 
+				player = new QMediaPlayer;
+				// Assign the mi.mp3 to player 
+				player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/mi.mp3").absolutePath()));
+				// Set player volume 
+				player->setVolume(90); 
+				// Play the player audio 
+				player->play();	  
+				// Connect dobutton to detect if mi is pressed by the user  
+				connect(dobutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+				connect(rebutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+				connect(mibutton, SIGNAL(clicked()), this, SLOT(feedbackSlot()));
+				connect(fabutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+				connect(sobutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+				connect(labutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+				connect(tibutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+			}
+			
+		else if (randomNumber==4)
+		{    
+				// reset player from begining 
+				player = new QMediaPlayer;
+				// Assign the fa.mp3 to player 
+				player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/fa.mp3").absolutePath()));
+				// Set player volume 
+				player->setVolume(90); 
+				// Play the player audio 
+				player->play();	  
+				// Connect dobutton to detect if fa is pressed by the user  
+				connect(dobutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+				connect(rebutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+				connect(mibutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+				connect(fabutton, SIGNAL(clicked()), this, SLOT(feedbackSlot()));
+				connect(sobutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+				connect(labutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+				connect(tibutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+		}
+		else if (randomNumber==5)
+		{    
+				// reset player from begining 
+				player = new QMediaPlayer;
+				// Assign the so.mp3 to player 
+				player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/so.mp3").absolutePath()));
+				// Set player volume 
+				player->setVolume(90); 
+				// Play the player audio 
+				player->play();	  
+				// Connect dobutton to detect if so is pressed by the user  
+				connect(dobutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+				connect(rebutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+				connect(mibutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+				connect(fabutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+				connect(sobutton, SIGNAL(clicked()), this, SLOT(feedbackSlot()));
+				connect(labutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+				connect(tibutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+			}	 
+		else if (randomNumber==6)
+		{   
+				// reset player from begining 
+				player = new QMediaPlayer;
+				// Assign the la.mp3 to player 
+				player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/la.mp3").absolutePath()));
+				// Set player volume 
+				player->setVolume(90); 
+				// Play the player audio 
+				player->play();	  
+				// Connect dobutton to detect if la is pressed by the user  
+				connect(dobutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+				connect(rebutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+				connect(mibutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+				connect(fabutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+				connect(sobutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+				connect(labutton, SIGNAL(clicked()), this, SLOT(feedbackSlot()));
+				connect(tibutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));			}	 
+		else if (randomNumber==7)
+		{   
+				// reset player from begining 
+				player = new QMediaPlayer;
+				// Assign the si.mp3 to player 
+				player->setMedia(QUrl::fromLocalFile(QDir("../audiofiles/ti.mp3").absolutePath()));
+				// Set player volume 
+				player->setVolume(90); 
+				// Play the player audio 
+				player->play();	  
+				// Connect dobutton to detect if ti is pressed by the user  
+				connect(dobutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+				connect(rebutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+				connect(mibutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+				connect(fabutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+				connect(sobutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+				connect(labutton, SIGNAL(clicked()), this, SLOT(feedbackWrong()));
+				connect(tibutton, SIGNAL(clicked()), this, SLOT(feedbackSlot()));
+			}	 
 
 }
 
@@ -761,7 +798,7 @@ void Window::feedbackSlot()
 void Window::feedbackWrong()
 {
 	feedbackbutton->setText(tr("Wrong!!"));
-	feedbackbutton->setStyleSheet("color: black; background-color: lightcoral");
+	feedbackbutton->setStyleSheet("color: black; background-color: red");
 }
 
 void Window::DoPressedSlot()
