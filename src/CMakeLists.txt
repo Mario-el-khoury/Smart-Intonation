@@ -18,17 +18,16 @@ find_package(Qt5 COMPONENTS MultimediaWidgets REQUIRED)
 FIND_PACKAGE( Qt5Multimedia REQUIRED )
 FIND_PACKAGE( Qt5MultimediaWidgets REQUIRED )
 
-add_executable(Smarto
+add_executable(qwt-example
   window.cpp
   main.cpp
 )
 
-target_link_libraries(Smarto Qt5::Widgets)
-target_link_libraries(Smarto qwt-qt5)
-target_link_libraries(Smarto Qt5::Multimedia)
-target_link_libraries(Smarto Qt5::MultimediaWidgets)
-target_link_libraries(Smarto fftw3)
+target_link_libraries(qwt-example Qt5::Widgets)
+target_link_libraries(qwt-example qwt-qt5)
+target_link_libraries(qwt-example Qt5::Multimedia)
+target_link_libraries(qwt-example Qt5::MultimediaWidgets)
+target_link_libraries(qwt-example fftw3)
 
 
-install(TARGETS Smarto
-RUNTIME DESTINATION bin)
+install(TARGETS qwt-example)

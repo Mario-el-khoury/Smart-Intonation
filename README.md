@@ -44,7 +44,7 @@ Install the QT5 and Qwt development packages:
 ```
     apt-get install qtdeclarative5-dev-tools
     apt-get install libqwt-qt5-dev
-    apt-get install libfftw3-3
+    apt-get install fftw3
 ```
 
 To clone this git repository.
@@ -52,8 +52,7 @@ To clone this git repository.
 To build:
 
 ```
-    cd Smart-intonation
-    cd src
+    cd qwt-example
     cmake .
     make
 ```
@@ -61,7 +60,7 @@ To build:
 To run:
 
 ```
-    ./Smarto
+    ./qwt-example
 ```
 ## License
 
@@ -70,3 +69,4 @@ Distributed under the GPL-3.0 License. See LICENSE for more information.
 ## Note:
 
 Anyone who feels they can contribute any imporovements to the project is welcome to fork the project, and submit an issue with a pull request with the changes.
+
