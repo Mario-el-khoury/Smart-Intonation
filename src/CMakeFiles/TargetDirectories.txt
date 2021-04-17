@@ -1,0 +1,8 @@
+/home/jiangjiajun/Smart-Intonation/src/CMakeFiles/install/strip.dir
+/home/jiangjiajun/Smart-Intonation/src/CMakeFiles/edit_cache.dir
+/home/jiangjiajun/Smart-Intonation/src/CMakeFiles/rebuild_cache.dir
+/home/jiangjiajun/Smart-Intonation/src/CMakeFiles/list_install_components.dir
+/home/jiangjiajun/Smart-Intonation/src/CMakeFiles/Smarto.dir
+/home/jiangjiajun/Smart-Intonation/src/CMakeFiles/install/local.dir
+/home/jiangjiajun/Smart-Intonation/src/CMakeFiles/install.dir
+/home/jiangjiajun/Smart-Intonation/src/CMakeFiles/Smarto_autogen.dir

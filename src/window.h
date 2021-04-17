@@ -147,7 +147,8 @@ private:
 	int count=0;
 
     /** variable to intialise the value of sampleRate */
-	double sampleRate = 48000; 
+    int i = 48000;
+	double sampleRate = static_cast<double> (i); 
 
     /** variable to intialise the buffer time in ms  */
 	int bufferTime = 500; 
@@ -155,12 +156,15 @@ private:
 	/** variable to store peakHeartz values */
 	double peakHertz;
     /** Intialise peakHeartzScale and define which scale the user is using */
-	double peakHertzScale =523.25;
+	int a = 523.25 ;
+	double peakHertzScale =static_cast<double> (a);
 
 	/** Intialise the lowest frequency detected by the software */
-    double lowestFrequency = 100 ;
+	int b = 100 ;
+    double lowestFrequency =static_cast<double> (b);
 	/** Intialise the highest frequency detected by the software */
-	double highestFrequency = 1000;
+	int c = 1000;
+	double highestFrequency = static_cast<double> (c);
     /** Pointer to access readmicarray values */
 	QByteArray* readmicarray;
 	/** Pointer to access readmic values */
