@@ -18,12 +18,6 @@ music software for intonation training
 - 🔧 &nbsp;
   ![Visual Studio Code](https://img.shields.io/badge/-Visual%20Studio%20Code-333333?style=flat&logo=visual-studio-code&logoColor=007ACC)
   
-<br/>
-
-<a href="https://github.com/Mario-el-khoury">
-  <img height="180em" src="https://github-readme-stats.vercel.app/api?username=https://github.com/Mario-el-khoury&theme=buefy&show_icons=true" />
-  <img height="180em" src="https://github-readme-stats.vercel.app/api/top-langs/?username=https://github.com/Mario-el-khoury&theme=buefy&layout=compact" />
-</a>
 
 <br/>
 
@@ -36,7 +30,7 @@ music software for intonation training
         <img src="https://img.shields.io/badge/-YouTube-242424?style=flat-square&logo=circle&logoColor=White" /></a>
 </p>
 
-⭐️ Collaborator 1: [Mario-el-khoury](https://github.com/Mario-el-khoury)
+⭐️ Collaborators: [Mario-el-khoury](https://github.com/Mario-el-khoury)
              [Zi-han-Huang](https://github.com/Zi-han-Huang)
              [Jiangjiajun-Dominic](https://github.com/Jiangjiajun-Dominic)
 
