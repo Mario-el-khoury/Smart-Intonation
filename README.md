@@ -24,10 +24,9 @@ music software for intonation training
 <h3> 🤝🏻 &nbsp;Connect with us </h3>
 
 <p align="center">
-<a href="https://www.linkedin.com/in/mario-el-khoury-027216158"><img alt="LinkedIn" src="https://img.shields.io/badge/LinkedIn-Mario%20El%20Khoury-blue?style=flat-square&logo=linkedin"></a>
 <a href="https://www.instagram.com/smartintonation/channel/"><img alt="Instagram" src="https://img.shields.io/badge/Instagram-Smartintonation-blue?style=flat-square&logo=instagram"></a>
-
 <a href="https://www.youtube.com/channel/UCLF5YnaRpRm0oMdEWnp-TTw"><img alt="Youtube" src="https://img.shields.io/badge/YouTube-Smartintonation-blue?style=flat-square&logo=YouTube"></a>
+<a href="https://www.linkedin.com/in/mario-el-khoury-027216158"><img alt="LinkedIn" src="https://img.shields.io/badge/LinkedIn-Mario%20El%20Khoury-blue?style=flat-square&logo=linkedin"></a>
 
 </p>
 
