@@ -30,4 +30,5 @@ target_link_libraries(Smarto Qt5::MultimediaWidgets)
 target_link_libraries(Smarto fftw3)
 
 
-install(TARGETS Smarto)
+install(TARGETS Smarto
+RUNTIME DESTINATION bin)

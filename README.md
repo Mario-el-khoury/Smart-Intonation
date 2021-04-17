@@ -19,7 +19,8 @@ To clone this git repository.
 To build:
 
 ```
-    cd Smarto
+    cd Smart-intonation
+    cd src
     cmake .
     make
 ```

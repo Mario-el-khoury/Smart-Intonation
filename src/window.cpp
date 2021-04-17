@@ -1,5 +1,4 @@
 #include "window.h"
-#include "time.h"
 #include <QAudioInput>
 #include <QAudioRecorder>
 #include <QMediaPlayer>
@@ -7,7 +6,10 @@
 #include <cmath>  // for sine stuff
 #include <iostream>
 #include <random>   // for random numbers
-#include <unistd.h>   // for delays   //usleep(3000000); sleep 3 seconds
+#include <unistd.h>   // for delays   
+#include <cstdlib>
+#include <ctime>
+#include "time.h"
 #include <QString>
 
 /* open the constructer of the project*/
@@ -141,10 +143,34 @@ Window::Window()
 	stoprecording->hide();
 	stoprecording->setStyleSheet("color: black; background-color: lightcoral");
 
+	text= new QLineEdit();
+	text->setReadOnly(true);
+	text->setFixedHeight(30);
+	text->setFixedWidth(70);
+	text->hide();
+
+	text3= new QLineEdit();
+	text3->setReadOnly(true);
+	text3->setFixedHeight(30);
+	text3->setFixedWidth(70);
+	text3->hide();
+    //text3->setStyleSheet("color: black; background-color: red");
+	//QPushButton *pushbutton1 = new QPushButton(this);      // to open new window when pressing pushbutton
+    // QWidget *widget = new QWidget(this);
+    //widget->setWindowFlags(Qt::Window);
+    // widget->setWindowTitle("New Window");
+   
+
+
+    // Player  declaration
      player = new QMediaPlayer;
+    // Set player as a C-scale video located in the src directory 
      player->setMedia(QUrl::fromLocalFile(QFileInfo("C-scale.mp4").absoluteFilePath()));
-	 player->setVolume(50);           // set the volume 
+	// Set sound volume 
+	 player->setVolume(50);   
+	// Intialise video widget        
 	 videoWidget = new QVideoWidget;
+	// Allocate the video to Player 
      player->setVideoOutput(videoWidget);
 
 	connect(learningbutton, SIGNAL(clicked()), this, SLOT(playSlot()));  //connect button1 to the playSlot
@@ -180,12 +206,13 @@ Window::Window()
 	hLayout->addWidget(labutton);
 	hLayout->addWidget(tibutton);
     hLayout->addWidget(feedbackbutton);
+	hLayout->addWidget(text);
+	hLayout->addWidget(text3);	
+	hLayout->addWidget(stoprecording);
 	hLayout->addWidget(exitbutton);
 	hLayout->addWidget(videoWidget);  
-	hLayout->addWidget(stoprecording);
 	videoWidget->hide();
 	setLayout(hLayout);
-
 
 	fftbuffsize = (int)(sampleRate*((double)bufferTime/1000));
 	int fftbuffoutsize = (fftbuffsize/2)+1; 
@@ -249,6 +276,8 @@ void Window::exitSlot()
 	sobutton->hide();
 	labutton->hide();
 	tibutton->hide();
+	text->hide();
+	text3->hide();
 	feedbackbutton->hide();
 	stoprecording->hide();
     recognizingbutton->setEnabled(true);
@@ -275,6 +304,8 @@ void Window::exitSlot()
 	testingbutton->setDisabled(true);
 	learningbutton->setDisabled(true);
 	piano->setDisabled(true);
+	text->show();
+	text3->show();
 
 	QAudioFormat format;
     // Set up the desired format, for example:
@@ -289,27 +320,28 @@ void Window::exitSlot()
     if (!info.isFormatSupported(format)) {
         qWarning() << "Default format not supported, trying to use the nearest.";
         format = info.nearestFormat(format);
-    }
-
+   	 }
+	// initialise new audio	
     audio = new QAudioInput(format, this);
-
-
-	audio->setBufferSize(fftbuffsize); // size of imput data
-	
+	// size of imput data
+	audio->setBufferSize(fftbuffsize); 
+	// slot connection between audio and readmicrophone data
 	connect(audio, SIGNAL(notify()),this,SLOT(readMicrophone()));
-	//time_t t1(time_t *t1);
+	// initialise new array 
 	readmicarray = new QByteArray;
+	//assing the readmicarray to readMic
 	readMic = new QBuffer(readmicarray);
 	readMic->open(QIODevice::ReadWrite|QIODevice::Truncate);
-
-	audio->setNotifyInterval(bufferTime);
 	audio->start(readMic);
-
-	qDebug()<<"frequency resolution"<< sampleRate/audio->bufferSize();
+	audio->setNotifyInterval(bufferTime);
+	
+	qDebug()<<"frequency resolution" << sampleRate/audio->bufferSize();
+   
 }
 
-void Window::readMicrophone(){
-	static QString str = "melody(click here to hide!): ";
+void Window::readMicrophone()
+{
+    static QString str = "melody(click here to hide!): ";
 	QByteArray datain = readMic->data();
 	readMic->buffer().clear();
 	readMic->reset();
@@ -324,8 +356,8 @@ void Window::readMicrophone(){
 	//find maximum peak in fftouputbuffer
 	int peakIndex = 0;
 	double peakmag =0;
-
-	for (int i =1;i<(audio->bufferSize()/2)+1;i++){
+    // find the magnitude of the signal between two intervals
+	for (int i =(int)((lowestFrequency *audio->bufferSize())/sampleRate); i<(int)((highestFrequency*audio->bufferSize())/sampleRate); i++) {						
 		double mag = sqrt(fftoutputbuffer[i][0]*fftoutputbuffer[i][0] +
 							fftoutputbuffer[i][1]*fftoutputbuffer[i][1]); //get magnitude
 
@@ -336,122 +368,223 @@ void Window::readMicrophone(){
 		
 	}
 	
-	if (peakmag > 50000){
+	if (peakmag > 80000){
 		time_t t1=time(NULL);
 		static double duration = 0.3;
 		peakHertz = peakIndex * (sampleRate/audio->bufferSize());
 		
 		if((peakHertz > 110) && (peakHertz < 880)){
-		qDebug() << peakHertz << "HZ "<< "t1:" << ctime(&t1);
-		peakHertz /=  262.0;
-		while(peakHertz < 1){
-			peakHertz *= 2;
-		}
-		while(peakHertz >= 2){ 
-			peakHertz /= 2;
-		}
-	
-    if (  (peakHertz >= pow (2, -1.0/12.0)) && (peakHertz < pow (2, 1.0/12.0)) && (difftime(t1, t2) > duration))
-		{
-			qDebug() << "Do"<< " "<< "t2:" << ctime(&t2) << "______";
-			str.append("1 "); 
-			melody->setText(str);
-			t2 = t1;
-			dobutton->setStyleSheet("color: black; background-color: darkseagreen");
-			rebutton->setStyleSheet("color: black; background-color: ivory");
-			mibutton->setStyleSheet("color: black; background-color: ivory");
-			fabutton->setStyleSheet("color: black; background-color: ivory");
-			sobutton->setStyleSheet("color: black; background-color: ivory");
-			labutton->setStyleSheet("color: black; background-color: ivory");
-			tibutton->setStyleSheet("color: black; background-color: ivory");
-		}
+			qDebug() << peakHertz << "HZ "<< "t1:" << ctime(&t1);
+			peakHertz /=  262.0;
+			while(peakHertz < 1){
+				peakHertz *= 2;
+			}
+			while(peakHertz >= 2){ 
+				peakHertz /= 2;
+			}
 
-	else if (  (peakHertz >= pow (2, 1.0/12.0)) && (peakHertz < pow (2, 3.0/12.0) ) && (difftime(t1, t2) > duration))
-			{
-				qDebug() << "Re"<< " "<< "t2:" << ctime(&t2) << "______";;
-				str.append("2 "); 
-				melody->setText(str);
-				t2 = t1;
-				dobutton->setStyleSheet("color: black; background-color: ivory");
-				rebutton->setStyleSheet("color: black; background-color: darkseagreen");
-				mibutton->setStyleSheet("color: black; background-color: ivory");
-				fabutton->setStyleSheet("color: black; background-color: ivory");
-				sobutton->setStyleSheet("color: black; background-color: ivory");
-				labutton->setStyleSheet("color: black; background-color: ivory");
-				tibutton->setStyleSheet("color: black; background-color: ivory");
-			}
-	else if (  (peakHertz >= pow (2, 3.0/12.0)) && (peakHertz < pow (2, 4.5/12.0)) && (difftime(t1, t2) > duration))
-			{
-				qDebug() << "Mi"<< " "<< "t2" << " " << ctime(&t2) << "______";;
-				str.append("3 ");
-				melody->setText(str); 
-				t2 = t1;
-				std::cout << "t2"  << ctime(&t2);
-				dobutton->setStyleSheet("color: black; background-color: ivory");
-				rebutton->setStyleSheet("color: black; background-color: ivory");
-				mibutton->setStyleSheet("color: black; background-color: darkseagreen");
-				fabutton->setStyleSheet("color: black; background-color: ivory");
-				sobutton->setStyleSheet("color: black; background-color: ivory");
-				labutton->setStyleSheet("color: black; background-color: ivory");
-				tibutton->setStyleSheet("color: black; background-color: ivory");
+			if(( peakHertz >= pow (2, -1.0/12.0)) && (peakHertz < pow ( 2,1.0/12.0)) && (difftime(t1, t2) > duration)){		 
+				if((peakHertz <= pow (2, 0.3/12.0))&& (peakHertz >= pow (2,-0.3/12.0))){
+					qDebug() << "Do"<< " "<< "t2:" << ctime(&t2) << "______";
+					str.append("1 "); 
+					melody->setText(str);
+					t2 = t1;
+					dobutton->setStyleSheet("color: black; background-color: darkseagreen");
+					rebutton->setStyleSheet("color: black; background-color: ivory");
+					mibutton->setStyleSheet("color: black; background-color: ivory");
+					fabutton->setStyleSheet("color: black; background-color: ivory");
+					sobutton->setStyleSheet("color: black; background-color: ivory");
+					labutton->setStyleSheet("color: black; background-color: ivory");
+					tibutton->setStyleSheet("color: black; background-color: ivory");
+				}
+				else if((peakHertz > pow (2, 0.3/12.0)) &&  (peakHertz < pow ( 2,1.0/12.0))){
+					text->clear();	
+					text3->setText("High Do!");
+					text->setStyleSheet("color: black; background-color: white");
+					text3->setStyleSheet("color: black; background-color: red");
+				}
+				else if((peakHertz < pow (2, -0.3/12.0)) && (peakHertz > pow (2, -1.0/12.0))){	
+					text3->clear();
+					text->setText("Low Do!");
+					text3->setStyleSheet("color: black; background-color: white");
+					text->setStyleSheet("color: black; background-color: red");	
+				}
 			}	
-	else  if (  (peakHertz >= pow (2, 4.5/12.0)) && (peakHertz < pow (2, 6.0/12.0)) && (difftime(t1, t2) > duration))
-			{
-				qDebug() << "Fa"<< " "<< "t2:" << ctime(&t2) << "______";;
-				str.append("4 "); 
-				melody->setText(str);
-				t2 = t1;
-				dobutton->setStyleSheet("color: black; background-color: ivory");
-				rebutton->setStyleSheet("color: black; background-color: ivory");
-				mibutton->setStyleSheet("color: black; background-color: ivory");
-				fabutton->setStyleSheet("color: black; background-color: darkseagreen");
-				sobutton->setStyleSheet("color: black; background-color: ivory");
-				labutton->setStyleSheet("color: black; background-color: ivory");
-				tibutton->setStyleSheet("color: black; background-color: ivory");
+			else if ((peakHertz >= pow (2, 1.0/12.0)) && (peakHertz < pow (2, 3.0/12.0)) && (difftime(t1, t2) > duration)){
+					if((peakHertz >= pow (2,1.7/12.0))&& (peakHertz <= pow (2,2.3/12.0))){
+						qDebug() << "Re"<< " "<< "t2:" << ctime(&t2) << "______";;
+						str.append("2 "); 
+						melody->setText(str);
+						t2 = t1;
+						dobutton->setStyleSheet("color: black; background-color: ivory");
+						rebutton->setStyleSheet("color: black; background-color: darkseagreen");
+						mibutton->setStyleSheet("color: black; background-color: ivory");
+						fabutton->setStyleSheet("color: black; background-color: ivory");
+						sobutton->setStyleSheet("color: black; background-color: ivory");
+						labutton->setStyleSheet("color: black; background-color: ivory");
+						tibutton->setStyleSheet("color: black; background-color: ivory");
+					}
+					else if((peakHertz > pow (2,2.3/12.0))&& (peakHertz < pow (2,3.0/12.0))){
+						text->clear();	
+						text3->setText("High Re!");
+						text->setStyleSheet("color: black; background-color: white");
+						text3->setStyleSheet("color: black; background-color: red");
+					}
+					else if((peakHertz > pow (2,1.0/12.0))&& (peakHertz < pow (2,1.7/12.0))){	
+						text3->clear();
+						text->setText("Low Re!");
+						text3->setStyleSheet("color: black; background-color: white");
+						text->setStyleSheet("color: black; background-color: red");
+					}
+			}
+			else if ((peakHertz >= pow (2, 3.0/12.0)) && (peakHertz < pow (2, 4.5/12.0)) && (difftime(t1, t2) > duration)){
+					//	double note = pow (2, 3.75/12.0);
+					if ((peakHertz >= pow (2,3.525/12.0))&& (peakHertz <= pow (2,3.975/12.0))){
+						qDebug() << "Mi"<< " "<< "t2" << " " << ctime(&t2) << "______";;
+						str.append("3 ");
+						melody->setText(str); 
+						t2 = t1;
+						std::cout << "t2"  << ctime(&t2);
+						dobutton->setStyleSheet("color: black; background-color: ivory");
+						rebutton->setStyleSheet("color: black; background-color: ivory");
+						mibutton->setStyleSheet("color: black; background-color: darkseagreen");
+						fabutton->setStyleSheet("color: black; background-color: ivory");
+						sobutton->setStyleSheet("color: black; background-color: ivory");
+						labutton->setStyleSheet("color: black; background-color: ivory");
+						tibutton->setStyleSheet("color: black; background-color: ivory");
+					}
+					else if((peakHertz > pow (2, 3.975/12.0)) && (peakHertz < pow (2,4.5/12.0))){
+						text->clear();	
+						text3->setText("High Mi!");
+						text->setStyleSheet("color: black; background-color: white");
+						text3->setStyleSheet("color: black; background-color: red");
+					}
+					else if((peakHertz > pow (2, 3.0/12.0)) && (peakHertz <= pow (2,3.525/12.0))){
+						text3->clear();
+						text->setText("Low Mi!");
+						text3->setStyleSheet("color: black; background-color: white");
+						text->setStyleSheet("color: black; background-color: red");
+					}	
+			}	
+			else if((peakHertz >= pow ( 2,4.5/12.0)) && (peakHertz < pow ( 2,6.0/12.0))&& (difftime(t1, t2) > duration)){
+					//	double note = pow (2, 5.25/12.0);
+					if ((peakHertz >= pow (2, 5.025/12.0)) && (peakHertz <= pow (2, 5.475/12.0))){
+						qDebug() << "Fa"<< " "<< "t2:" << ctime(&t2) << "______";;
+						str.append("4 "); 
+						melody->setText(str);
+						t2 = t1;
+						dobutton->setStyleSheet("color: black; background-color: ivory");
+						rebutton->setStyleSheet("color: black; background-color: ivory");
+						mibutton->setStyleSheet("color: black; background-color: ivory");
+						fabutton->setStyleSheet("color: black; background-color: darkseagreen");
+						sobutton->setStyleSheet("color: black; background-color: ivory");
+						labutton->setStyleSheet("color: black; background-color: ivory");
+						tibutton->setStyleSheet("color: black; background-color: ivory");
+					}
+					else if((peakHertz > pow (2, 5.475/12.0)) && (peakHertz < pow (2, 6.0/12.0))){
+						text->clear();	
+						text->setStyleSheet("color: black; background-color: white");
+						text3->setStyleSheet("color: black; background-color: red");
+						text3->setText("High Fa!");
+					}
+					else if((peakHertz > pow (2, 4.5/12.0)) && (peakHertz < pow (2, 5.025/12.0))){	
+						text3->clear();
+						text->setText("Low Fa!");
+						text3->setStyleSheet("color: black; background-color: white");
+						text->setStyleSheet("color: black; background-color: red");
+					}
 			} 
-	else if (  (peakHertz >= pow (2, 6.0/12.0))  && (peakHertz < pow (2, 8.0/12.0)) && (difftime(t1, t2) > duration))
-			{
-				qDebug() << "So"<< " "<< "t2:" << ctime(&t2) << "______";;
-				QString note = str.append("5 "); 
-				melody->setText(str);
-				t2 = t1;
-				dobutton->setStyleSheet("color: black; background-color: ivory");
-				rebutton->setStyleSheet("color: black; background-color: ivory");
-				mibutton->setStyleSheet("color: black; background-color: ivory");
-				fabutton->setStyleSheet("color: black; background-color: ivory");
-				sobutton->setStyleSheet("color: black; background-color: darkseagreen");
-				labutton->setStyleSheet("color: black; background-color: ivory");
-				tibutton->setStyleSheet("color: black; background-color: ivory");
+			else if ((peakHertz >= pow ( 2, 6.0/12.0))  && (peakHertz < pow ( 2, 8.0/12.0))&& (difftime(t1, t2) > duration)){
+					//  double note = pow (2, 7.0/12.0);
+					if ((peakHertz >= pow (2, 6.7/12.0)) && (peakHertz <= pow (2, 7.3/12.0))){
+						qDebug() << "So"<< " "<< "t2:" << ctime(&t2) << "______";;
+						QString note = str.append("5 "); 
+						melody->setText(str);
+						t2 = t1;
+						dobutton->setStyleSheet("color: black; background-color: ivory");
+						rebutton->setStyleSheet("color: black; background-color: ivory");
+						mibutton->setStyleSheet("color: black; background-color: ivory");
+						fabutton->setStyleSheet("color: black; background-color: ivory");
+						sobutton->setStyleSheet("color: black; background-color: darkseagreen");
+						labutton->setStyleSheet("color: black; background-color: ivory");
+						tibutton->setStyleSheet("color: black; background-color: ivory");
+					}
+					else if ((peakHertz > pow (2, 7.3/12.0)) && (peakHertz < pow (2, 8.0/12.0))){
+						text->clear();	
+						text3->setText("High So!");
+						text->setStyleSheet("color: black; background-color: white");
+						text3->setStyleSheet("color: black; background-color: red");
+					}
+					else if ((peakHertz > pow (2, 6.0/12.0)) && (peakHertz < pow (2, 6.7/12.0))){
+						text3->clear();
+						text->setText("Low So!");
+						text3->setStyleSheet("color: black; background-color: white");
+						text->setStyleSheet("color: black; background-color: red");
+					}	
 			}
-	else if (  (peakHertz >= pow (2, 8.0/12.0)) && (peakHertz < pow (2, 10.0/12.0)) && (difftime(t1, t2) > duration))
-			{
-				qDebug() << "La"<< " "<< "t2:" << ctime(&t2) << "______";;
-				QString note = str.append("6 ");
-				melody->setText(str); 
-				t2 = t1;
-				dobutton->setStyleSheet("color: black; background-color: ivory");
-				rebutton->setStyleSheet("color: black; background-color: ivory");
-				mibutton->setStyleSheet("color: black; background-color: ivory");
-				fabutton->setStyleSheet("color: black; background-color: ivory");
-				sobutton->setStyleSheet("color: black; background-color: ivory");
-				labutton->setStyleSheet("color: black; background-color: darkseagreen");
-				tibutton->setStyleSheet("color: black; background-color: ivory");
+			else if((peakHertz >= pow (2, 8.0/12.0)) && (peakHertz < pow (2, 10.0/12.0))&& (difftime(t1, t2) > duration)){
+					//	double note = pow (2, 9.0/12.0);			
+					if ((peakHertz >= pow (2, 8.7/12.0)) && (peakHertz <= pow (2, 9.3/12.0))){
+						qDebug() << "La"<< " "<< "t2:" << ctime(&t2) << "______";;
+						QString note = str.append("6 ");
+						melody->setText(str); 
+						t2 = t1;
+						dobutton->setStyleSheet("color: black; background-color: ivory");
+						rebutton->setStyleSheet("color: black; background-color: ivory");
+						mibutton->setStyleSheet("color: black; background-color: ivory");
+						fabutton->setStyleSheet("color: black; background-color: ivory");
+						sobutton->setStyleSheet("color: black; background-color: ivory");
+						labutton->setStyleSheet("color: black; background-color: darkseagreen");
+						tibutton->setStyleSheet("color: black; background-color: ivory");
+					}
+					else if((peakHertz > pow (2, 9.3/12.0)) && (peakHertz < pow (2, 10.0/12.0))){
+						text->clear();	
+						text->setStyleSheet("color: black; background-color: white");
+						text3->setStyleSheet("color: black; background-color: red");
+						text3->setText("High La!");
+					}
+					else if((peakHertz > pow (2, 8.0/12.0)) && (peakHertz < pow (2, 8.7/12.0))){
+						text->clear();	
+						text3->clear();
+						text->setText("Low La!");
+						text3->setStyleSheet("color: black; background-color: white");
+						text->setStyleSheet("color: black; background-color: red");
+					}				
 			}
-	else if (  (peakHertz >= pow (2, 10.0/12.0)) && (peakHertz < pow (2, 11.5/12.0)) && (difftime(t1, t2) > duration))
-			{
-				qDebug() << "Ti"<< " "<< "t2:" << ctime(&t2) << "______";;
-				QString note = str.append("7 ");
-				melody->setText(str);
-				t2 = t1;
-				dobutton->setStyleSheet("color: black; background-color: ivory");
-				rebutton->setStyleSheet("color: black; background-color: ivory");
-				mibutton->setStyleSheet("color: black; background-color: ivory");
-				fabutton->setStyleSheet("color: black; background-color: ivory");
-				sobutton->setStyleSheet("color: black; background-color: ivory");
-				labutton->setStyleSheet("color: black; background-color: ivory");
-				tibutton->setStyleSheet("color: black; background-color: darkseagreen");
-			}	
-	}
+			else if ((peakHertz >= pow (2, 10.0/12.0)) && (peakHertz < pow (2, 11.5/12.0)) && (difftime(t1, t2) > duration)){		
+					// 	double note = pow (2, 10.75/12.0);
+					if ((peakHertz >= pow (2, 10.525/12.0)) && (peakHertz <= pow (2, 10.975/12.0))){
+						qDebug() << "Ti"<< " "<< "t2:" << ctime(&t2) << "______";;
+						QString note = str.append("7 ");
+						melody->setText(str);
+						t2 = t1;
+						dobutton->setStyleSheet("color: black; background-color: ivory");
+						rebutton->setStyleSheet("color: black; background-color: ivory");
+						mibutton->setStyleSheet("color: black; background-color: ivory");
+						fabutton->setStyleSheet("color: black; background-color: ivory");
+						sobutton->setStyleSheet("color: black; background-color: ivory");
+						labutton->setStyleSheet("color: black; background-color: ivory");
+						tibutton->setStyleSheet("color: black; background-color: darkseagreen");
+					}
+				else if ((peakHertz > pow (2, 10.975/12.0)) &&  (peakHertz < pow ( 2,11.5/12.0))){
+							text->clear();	
+							text->setStyleSheet("color: black; background-color: white");
+							text3->setStyleSheet("color: black; background-color: red");
+							text3->setText("High Ti!");
+				}	
+				else if ((peakHertz < pow (2, 10.525/12.0)) && (peakHertz > pow (2, 10/12.0))){
+							text3->clear();
+							text3->setStyleSheet("color: black; background-color: white");
+							text->setStyleSheet("color: black; background-color: red");
+							text->setText("Low Ti!");
+				}
+			}
+			else{  
+				text->clear();
+				text3->setStyleSheet("color: black; background-color: white");
+				text->setStyleSheet("color: black; background-color: white");
+			}
+		}
 	}
 }
 
@@ -630,7 +763,6 @@ void Window::feedbackWrong()
 	feedbackbutton->setStyleSheet("color: black; background-color: lightcoral");
 }
 
- /*                  */
 void Window::DoPressedSlot()
  {
     
@@ -780,7 +912,6 @@ void Window::clearnotes()
 void Window::quitApp()    
 { 
     Window::close();
-   
 }
 
 

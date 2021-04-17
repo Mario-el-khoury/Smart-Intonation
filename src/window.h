@@ -10,19 +10,22 @@
 #include <QDebug>
 #include <algorithm>
 #include <fftw3.h>
+#include <QLineEdit>
 
-
+//  Major Scales {a=440.00, b=493.88, c=523.25, d=587.33, e=659.25, f=698.46, g=783.99};
 
 /** class definition 'Window' where every tone is generated any recieved using fft   */
 
 class Window : public QWidget
 {
 	// must include the Q_OBJECT macro for for the Qt signals/slots framework to work with this class
+	/** Q_OBJECT macro for for the Qt signals/slots framework */
 	Q_OBJECT
 
 public:
-	Window(); // default constructor - called when a Window is declared without arguments
-
+    /** Default constructor - called when a Window is declared without arguments */
+	Window(); 
+    /** Default deconstructor */
 	~Window();
 
 
@@ -109,20 +112,24 @@ private:
 	QPushButton *piano;
 	QPushButton *melody;
 	QPushButton *stoprecording;
+	QLineEdit *text, *text3;
   
   /*! Different Qt pointers*/
 	QAudioRecorder *audioRecorder;
+    /** Pointer to an array containing video music*/
 	QMediaPlayer *player;
+    /** Pointer to access the video */
     QVideoWidget* videoWidget;
+	/** Pointer to an array containing audio stuff*/
     QAudioInput* audio; 
+	/** Pointer to change audio format*/
 	QAudioFormat format;
-
-
+     
 	// layout elements from Qt itself http://qt-project.org/doc/qt-4.8/classes.html
-	QVBoxLayout  *vLayout;  // vertical layout
-	QHBoxLayout  *hLayout;  // horizontal layout
-
-	
+    /** Vertical layout */
+	QVBoxLayout  *vLayout;  
+	/** Horizontal layout*/
+	QHBoxLayout  *hLayout;  
 
     /** pointer to access fftinputbuffer */
 	double* fftinputbuffer;
@@ -147,11 +154,16 @@ private:
 
 	/** variable to store peakHeartz values */
 	double peakHertz;
+    /** Intialise peakHeartzScale and define which scale the user is using */
+	double peakHertzScale =523.25;
 
-    /** pointer to access readmicarray values */
+	/** Intialise the lowest frequency detected by the software */
+    double lowestFrequency = 100 ;
+	/** Intialise the highest frequency detected by the software */
+	double highestFrequency = 1000;
+    /** Pointer to access readmicarray values */
 	QByteArray* readmicarray;
-
-	/** vpointer to access readmic values */
+	/** Pointer to access readmic values */
 	QBuffer* readMic;
 	time_t t2 = 0;
 	
